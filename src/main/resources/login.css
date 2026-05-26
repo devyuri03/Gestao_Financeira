@@ -1,0 +1,53 @@
+body { 
+    margin: 0; 
+    font-family: sans-serif; 
+    background-color: #6482d8; /* Fundo azul padrão da referência */
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100vh; 
+}
+
+.login-container {
+    display: flex;
+    width: 800px;
+    height: 500px;
+    background: transparent;
+}
+
+.left-panel { 
+    flex: 1; 
+    padding: 40px; 
+    color: white; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+}
+
+.right-panel { 
+    flex: 1; 
+    background: white; 
+    border-radius: 20px; /* Cantos arredondados como em image_c19ce2.png */
+    padding: 40px; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+}
+
+input { 
+    border: none; 
+    border-bottom: 1px solid #ccc; 
+    padding: 10px 0; 
+    margin-bottom: 20px; 
+    width: 100%; 
+}
+
+button { 
+    background: #6482d8; 
+    color: white; 
+    border: none; 
+    padding: 12px; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    width: 100%;
+}
