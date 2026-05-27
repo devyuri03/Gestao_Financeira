@@ -20,19 +20,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Desabilita CSRF para facilitar chamadas da API via JS
-            .cors(cors -> cors.configurationSource(request -> {
-                CorsConfiguration config = new CorsConfiguration();
-                config.setAllowedOrigins(List.of("*"));
-                config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
-                config.setAllowedHeaders(List.of("*"));
-                return config;
-            }))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/login", "/api/usuarios/registro", "/css/**", "/js/**", "/", "/login").permitAll() // Libera rotas de login e arquivos estáticos
-                .anyRequest().authenticated() // Exige autenticação para o resto
-            );
-            
+                .csrf(csrf -> csrf.disable())
+                .headers(headers -> headers.frameOptions(frame -> frame.disable()))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/h2-console/**").permitAll()
+                        // Mantém outras liberações
+                        .requestMatchers("/css/**", "/js/**").permitAll()
+                        .requestMatchers("/login.html", "/registro.html", "/api/login", "/api/usuarios/registro", "/login").permitAll()
+                        .anyRequest().authenticated()
+                );
         return http.build();
     }
 

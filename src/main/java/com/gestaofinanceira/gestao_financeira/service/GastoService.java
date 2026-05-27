@@ -2,7 +2,6 @@ package com.gestaofinanceira.gestao_financeira.service;
 
 import com.gestaofinanceira.gestao_financeira.model.Gasto;
 import com.gestaofinanceira.gestao_financeira.repository.GastoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

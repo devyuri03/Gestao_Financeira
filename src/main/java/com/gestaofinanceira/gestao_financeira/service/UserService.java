@@ -34,7 +34,6 @@ public class UserService implements UserDetailsService {
     }
 
     public void salvarUsuario(User user) {
-        // Criptografa a senha antes de salvar no banco
         user.setSenha(passwordEncoder.encode(user.getSenha()));
         userRepository.save(user);
     }
