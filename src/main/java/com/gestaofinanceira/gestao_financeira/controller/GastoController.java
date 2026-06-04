@@ -4,6 +4,7 @@ import com.gestaofinanceira.gestao_financeira.model.Gasto;
 import com.gestaofinanceira.gestao_financeira.service.GastoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,8 +23,9 @@ public class GastoController {
 
 
     @GetMapping
-    public ResponseEntity<List<Gasto>> listarTodos() {
-        List<Gasto> gastos = gastoService.listar();
+    public ResponseEntity<List<Gasto>> listarUsuario(Authentication authentication) {
+        String email = authentication.getName();
+        List<Gasto> gastos = gastoService.listar(email);
         return ResponseEntity.ok(gastos);
     }
 

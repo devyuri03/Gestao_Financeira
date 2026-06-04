@@ -15,8 +15,8 @@ public class GastoService {
         this.gastoRepository = gastoRepository;
     }
 
-    public List<Gasto> listar(){
-        return gastoRepository.findAll();
+    public List<Gasto> listar(String email){
+        return gastoRepository.findByUsuarioEmail(email);
     }
 
     public Gasto salvar(Gasto gastoRecebido){
@@ -29,7 +29,9 @@ public class GastoService {
 
     public Gasto buscarPorId(Long id) {
         return gastoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Gasto não encontrado com o ID: " + id));
+                .orElseThrow((
+
+                ) -> new RuntimeException("Gasto não encontrado com o ID: " + id));
     }
 
 }
