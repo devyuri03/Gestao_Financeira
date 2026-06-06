@@ -1,31 +1,98 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Gestão Financeira</title>
+    <title>Login — Gestão Financeira</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <link rel="stylesheet" href="/css/auth.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
-    <div class="login-container">
-        <div class="left-panel">
-            <h1>Gestão de Gastos Pessoais</h1>
-            <p>Controle suas finanças de forma simples e intuitiva.</p>
+<div class="wrapper">
+
+    <!-- ── Painel esquerdo ── -->
+    <div class="left-panel">
+        <div class="brand">
+            <div class="brand-icon">
+                <i class="ti ti-pig-money"></i>
+            </div>
+            <span class="brand-name">Gestão Financeira</span>
         </div>
 
-        <div class="right-panel">
-            <h2>Login</h2>
-            <form id="loginForm">
-                <input type="email" id="username" name="username" placeholder="Email" required>
-                <input type="password" id="password" name="password" placeholder="Password" required>
-                <button type="button" onclick="realizarLogin()">Login</button>
-            </form>
-            <p>Ainda não tem conta? <a href="/registro.html">Criar conta</a></p>
+        <div class="hero-text">
+            <h1>Controle suas<br>finanças com<br>inteligência</h1>
+            <p>Acompanhe receitas, despesas e investimentos em um só lugar de forma simples e eficiente.</p>
+        </div>
+
+        <div class="deco-cards">
+            <div class="deco-card">
+                <div class="deco-card-label">Saldo do mês</div>
+                <div class="deco-card-value positive">+ R$ 2.450,00</div>
+                <div class="deco-card-bar">
+                    <div class="deco-card-bar-fill" style="width: 68%"></div>
+                </div>
+            </div>
+            <div class="deco-card deco-card-sm">
+                <div class="deco-card-label">Total de despesas</div>
+                <div class="deco-card-value negative">- R$ 1.230,00</div>
+            </div>
         </div>
     </div>
 
-    <script src="/js/app.js"></script>
+    <!-- ── Painel direito ── -->
+    <div class="right-panel">
+        <div class="form-card">
+
+            <div class="form-header">
+                <h2>Bem-vindo de volta</h2>
+                <p>Faça login para acessar sua conta</p>
+            </div>
+
+            <form id="loginForm" onsubmit="return false;">
+                <div class="field">
+                    <label for="username">Email</label>
+                    <div class="input-wrap">
+                        <i class="ti ti-mail"></i>
+                        <input type="email" id="username" name="username"
+                               placeholder="seu@email.com" required autocomplete="email">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="password">Senha</label>
+                    <div class="input-wrap">
+                        <i class="ti ti-lock"></i>
+                        <input type="password" id="password" name="password"
+                               placeholder="••••••••" required autocomplete="current-password">
+                    </div>
+                </div>
+
+                <div class="error-msg" id="errorMsg">
+                    <i class="ti ti-alert-circle"></i>
+                    Email ou senha incorretos.
+                </div>
+
+                <button type="button" class="btn-submit" onclick="realizarLogin()">
+                    Entrar
+                    <i class="ti ti-arrow-right"></i>
+                </button>
+            </form>
+
+            <p class="alt-link">
+                Ainda não tem conta? <a href="/registro.html">Criar conta</a>
+            </p>
+
+        </div>
+    </div>
+
+</div>
+
+<script src="/js/app.js"></script>
 
 </body>
 </html>

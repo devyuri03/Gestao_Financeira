@@ -42,9 +42,20 @@ public class GastoController {
 
 
     @PostMapping
-    public ResponseEntity<Gasto> salvar(@RequestBody Gasto gastoRecebido) {
-        Gasto gastoSalvo = gastoService.salvar(gastoRecebido);
+    public ResponseEntity<Gasto> salvar(@RequestBody Gasto gastoRecebido, Authentication authentication) {
+        Gasto gastoSalvo = gastoService.salvar(gastoRecebido, authentication.getName());
         return ResponseEntity.status(HttpStatus.CREATED).body(gastoSalvo);
+    }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Gasto> atualizar(@PathVariable Long id, @RequestBody Gasto gastoAtualizado) {
+        try {
+            Gasto gasto = gastoService.atualizarGasto(id, gastoAtualizado);
+            return ResponseEntity.ok(gasto);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 

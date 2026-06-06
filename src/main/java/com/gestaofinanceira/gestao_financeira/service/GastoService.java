@@ -1,7 +1,9 @@
 package com.gestaofinanceira.gestao_financeira.service;
 
 import com.gestaofinanceira.gestao_financeira.model.Gasto;
+import com.gestaofinanceira.gestao_financeira.model.User;
 import com.gestaofinanceira.gestao_financeira.repository.GastoRepository;
+import com.gestaofinanceira.gestao_financeira.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,16 +12,21 @@ import java.util.List;
 public class GastoService {
 
     private final GastoRepository gastoRepository;
+    private final UserRepository userRepository;
 
-    public GastoService(GastoRepository gastoRepository) {
+    public GastoService(GastoRepository gastoRepository, UserRepository userRepository) {
         this.gastoRepository = gastoRepository;
+        this.userRepository = userRepository;
     }
 
     public List<Gasto> listar(String email){
         return gastoRepository.findByUsuarioEmail(email);
     }
 
-    public Gasto salvar(Gasto gastoRecebido){
+    public Gasto salvar(Gasto gastoRecebido, String email){
+        User usuario = userRepository.findById(email)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado: " + email));
+        gastoRecebido.setUsuario(usuario);
         return gastoRepository.save(gastoRecebido);
     }
 
@@ -32,6 +39,18 @@ public class GastoService {
                 .orElseThrow((
 
                 ) -> new RuntimeException("Gasto não encontrado com o ID: " + id));
+    }
+
+    public Gasto atualizarGasto(Long id, Gasto gastoAtualizado){
+        Gasto gasto = gastoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Gasto não encontrado: " +id));
+        gasto.setValor(gastoAtualizado.getValor());
+        gasto.setDescricao(gastoAtualizado.getDescricao());
+        gasto.setCategoriaLancamento(gastoAtualizado.getCategoriaLancamento());
+        gasto.setStatusLancamento(gastoAtualizado.getStatusLancamento());
+        gasto.setData(gastoAtualizado.getData());
+
+        return gastoRepository.save(gasto);
     }
 
 }

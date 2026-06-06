@@ -1,5 +1,8 @@
 package com.gestaofinanceira.gestao_financeira.model;
 
+import com.gestaofinanceira.gestao_financeira.enums.CategoriaLancamento;
+import com.gestaofinanceira.gestao_financeira.enums.StatusLancamento;
+import com.gestaofinanceira.gestao_financeira.enums.TipoLancamento;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,6 +30,18 @@ public class Gasto {
 
     @Column(nullable = false)
     private LocalDate data;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TipoLancamento tipoLancamento;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private StatusLancamento statusLancamento;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private CategoriaLancamento categoriaLancamento;
 
     @ManyToOne
     @JoinColumn(name = "usuario_email", nullable = false)
