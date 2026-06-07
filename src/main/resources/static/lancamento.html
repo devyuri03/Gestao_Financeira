@@ -127,6 +127,7 @@
                             <th>Tipo</th>
                             <th>Descrição</th>
                             <th>Categoria</th>
+                            <th>Pagamento</th>
                             <th>Valor</th>
                             <th>Status</th>
                             <th>Ações</th>
@@ -134,7 +135,7 @@
                     </thead>
                     <tbody id="tbodyLancamentos">
                         <tr class="empty-row">
-                            <td colspan="7">
+                            <td colspan="8">
                                 <i class="ti ti-inbox"></i>
                                 <p>Nenhum lançamento encontrado</p>
                             </td>
@@ -198,14 +199,27 @@
                 </div>
             </div>
 
-            <div class="form-field">
-                <label>Status</label>
-                <select id="statusLancamento" required>
-                    <option value="">Selecione...</option>
-                    <option value="PAGO">Pago</option>
-                    <option value="PENDENTE">Pendente</option>
-                    <option value="CANCELADO">Cancelado</option>
-                </select>
+            <div class="form-row">
+                <div class="form-field">
+                    <label>Status</label>
+                    <select id="statusLancamento" required>
+                        <option value="">Selecione...</option>
+                        <option value="PAGO">Pago</option>
+                        <option value="PENDENTE">Pendente</option>
+                        <option value="CANCELADO">Cancelado</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label>Forma de Pagamento</label>
+                    <select id="pagamentoLancamento" required>
+                        <option value="">Selecione...</option>
+                        <option value="PIX">Pix</option>
+                        <option value="CARTAO_CREDITO">Cartão de Crédito</option>
+                        <option value="CARTAO_DEBITO">Cartão de Débito</option>
+                        <option value="DINHEIRO">Dinheiro</option>
+                        <option value="BOLETO">Boleto</option>
+                    </select>
+                </div>
             </div>
 
             <div class="modal-actions">

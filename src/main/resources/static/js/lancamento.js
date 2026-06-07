@@ -4,8 +4,22 @@ let editandoId = null;
 // ── Inicialização ────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     carregarLancamentos();
+    carregarUsuario();
     document.getElementById('dataLancamento').value = new Date().toISOString().split('T')[0];
 });
+
+async function carregarUsuario() {
+    try {
+        const res = await fetch('/api/usuarios/me');
+        if (!res.ok) return;
+        const { email } = await res.json();
+        document.getElementById('sidebarEmail').textContent = email;
+        const iniciais = email.substring(0, 2).toUpperCase();
+        document.querySelector('.user-avatar').textContent = iniciais;
+    } catch (e) {
+        console.error('Erro ao carregar usuário:', e);
+    }
+}
 
 // ── API ──────────────────────────────────────────
 async function carregarLancamentos() {
@@ -33,6 +47,7 @@ async function salvarLancamento(e) {
         tipoLancamento: document.getElementById('tipoLancamento').value,
         statusLancamento: document.getElementById('statusLancamento').value,
         categoriaLancamento: document.getElementById('categoriaLancamento').value,
+        pagamentoLancamento: document.getElementById('pagamentoLancamento').value,
     };
 
     const isEdicao = editandoId !== null;
@@ -113,6 +128,7 @@ function renderizarTabela(lista) {
             <td>${badgeTipo(l.tipoLancamento)}</td>
             <td>${l.descricao || '—'}</td>
             <td>${formatarCategoria(l.categoriaLancamento)}</td>
+            <td>${formatarPagamento(l.pagamentoLancamento)}</td>
             <td style="font-weight:600; color:${l.tipoLancamento === 'RECEITA' ? '#16a34a' : '#dc2626'}">
                 ${l.tipoLancamento === 'RECEITA' ? '+' : '-'} ${formatarValor(l.valor)}
             </td>
@@ -130,8 +146,8 @@ function renderizarTabela(lista) {
 }
 
 function atualizarCards(lista) {
-    const receitas  = lista.filter(l => l.tipoLancamento === 'RECEITA').reduce((s, l) => s + l.valor, 0);
-    const despesas  = lista.filter(l => l.tipoLancamento === 'DESPESA').reduce((s, l) => s + l.valor, 0);
+    const receitas  = lista.filter(l => l.tipoLancamento === 'RECEITA').reduce((s, l) => s + parseFloat(l.valor), 0);
+    const despesas  = lista.filter(l => l.tipoLancamento === 'DESPESA').reduce((s, l) => s + parseFloat(l.valor), 0);
     const saldo     = receitas - despesas;
 
     document.getElementById('totalReceitas').textContent   = formatarValor(receitas);
@@ -173,12 +189,13 @@ function abrirModalEdicao(id) {
     editandoId = id;
     document.getElementById('modalTitulo').textContent = 'Editar Lançamento';
 
-    document.getElementById('tipoLancamento').value      = l.tipoLancamento;
-    document.getElementById('dataLancamento').value      = l.data;
-    document.getElementById('descricaoLancamento').value = l.descricao || '';
-    document.getElementById('valorLancamento').value     = l.valor;
-    document.getElementById('categoriaLancamento').value = l.categoriaLancamento;
-    document.getElementById('statusLancamento').value    = l.statusLancamento;
+    document.getElementById('tipoLancamento').value       = l.tipoLancamento;
+    document.getElementById('dataLancamento').value       = l.data;
+    document.getElementById('descricaoLancamento').value  = l.descricao || '';
+    document.getElementById('valorLancamento').value      = l.valor;
+    document.getElementById('categoriaLancamento').value  = l.categoriaLancamento;
+    document.getElementById('statusLancamento').value     = l.statusLancamento;
+    document.getElementById('pagamentoLancamento').value  = l.pagamentoLancamento;
 
     document.getElementById('modalOverlay').classList.add('open');
 }
@@ -226,6 +243,17 @@ function badgeTipo(t) {
     };
     const [cls, icon, label] = map[t] || ['', '', t];
     return `<span class="badge ${cls}"><i class="ti ${icon}"></i>${label}</span>`;
+}
+
+function formatarPagamento(p) {
+    const map = {
+        PIX:            'Pix',
+        CARTAO_CREDITO: 'Cartão de Crédito',
+        CARTAO_DEBITO:  'Cartão de Débito',
+        DINHEIRO:       'Dinheiro',
+        BOLETO:         'Boleto',
+    };
+    return map[p] || p || '—';
 }
 
 function badgeStatus(s) {

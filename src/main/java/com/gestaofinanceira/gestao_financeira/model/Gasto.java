@@ -1,6 +1,7 @@
 package com.gestaofinanceira.gestao_financeira.model;
 
 import com.gestaofinanceira.gestao_financeira.enums.CategoriaLancamento;
+import com.gestaofinanceira.gestao_financeira.enums.PagamentoLancamento;
 import com.gestaofinanceira.gestao_financeira.enums.StatusLancamento;
 import com.gestaofinanceira.gestao_financeira.enums.TipoLancamento;
 import jakarta.persistence.*;
@@ -42,6 +43,10 @@ public class Gasto {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private CategoriaLancamento categoriaLancamento;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PagamentoLancamento pagamentoLancamento;
 
     @ManyToOne
     @JoinColumn(name = "usuario_email", nullable = false)

@@ -30,26 +30,33 @@ public class GastoService {
         return gastoRepository.save(gastoRecebido);
     }
 
-    public void deletar(Long id){
+    public void deletar(Long id, String email){
+        Gasto gasto = gastoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Gasto não encontrado: " + id));
+        if (!gasto.getUsuario().getEmail().equals(email)) {
+            throw new SecurityException("Acesso negado");
+        }
         gastoRepository.deleteById(id);
     }
 
     public Gasto buscarPorId(Long id) {
         return gastoRepository.findById(id)
-                .orElseThrow((
-
-                ) -> new RuntimeException("Gasto não encontrado com o ID: " + id));
+                .orElseThrow(() -> new RuntimeException("Gasto não encontrado com o ID: " + id));
     }
 
-    public Gasto atualizarGasto(Long id, Gasto gastoAtualizado){
+    public Gasto atualizarGasto(Long id, Gasto gastoAtualizado, String email){
         Gasto gasto = gastoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Gasto não encontrado: " +id));
+                .orElseThrow(() -> new RuntimeException("Gasto não encontrado: " + id));
+        if (!gasto.getUsuario().getEmail().equals(email)) {
+            throw new SecurityException("Acesso negado");
+        }
         gasto.setValor(gastoAtualizado.getValor());
         gasto.setDescricao(gastoAtualizado.getDescricao());
+        gasto.setTipoLancamento(gastoAtualizado.getTipoLancamento());
         gasto.setCategoriaLancamento(gastoAtualizado.getCategoriaLancamento());
         gasto.setStatusLancamento(gastoAtualizado.getStatusLancamento());
+        gasto.setPagamentoLancamento(gastoAtualizado.getPagamentoLancamento());
         gasto.setData(gastoAtualizado.getData());
-
         return gastoRepository.save(gasto);
     }
 
