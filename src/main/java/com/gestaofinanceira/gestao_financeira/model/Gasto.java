@@ -52,5 +52,8 @@ public class Gasto {
     @JoinColumn(name = "usuario_email", nullable = false)
     private User usuario;
 
+    @ManyToOne
+    @JoinColumn(name = "conta_id")
+    private Conta conta;
 
 }

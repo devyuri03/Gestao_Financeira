@@ -25,11 +25,11 @@
             <span class="nav-section">Principal</span>
             <a class="nav-item" href="#"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
             <a class="nav-item active" href="#"><i class="ti ti-arrows-right-left"></i> Lançamentos</a>
-            <a class="nav-item" href="#"><i class="ti ti-wallet"></i> Contas</a>
+            <a class="nav-item" href="contas.html"><i class="ti ti-wallet"></i> Contas</a>
             <a class="nav-item" href="#"><i class="ti ti-target"></i> Orçamento</a>
 
             <span class="nav-section">Análise</span>
-            <a class="nav-item" href="#"><i class="ti ti-trending-up"></i> Fluxo de Caixa</a>
+            <a class="nav-item" href="/fluxo.html"><i class="ti ti-trending-up"></i> Fluxo de Caixa</a>
             <a class="nav-item" href="#"><i class="ti ti-file-analytics"></i> Relatórios</a>
             <a class="nav-item" href="#"><i class="ti ti-chart-line"></i> Investimentos</a>
 
@@ -126,6 +126,7 @@
                             <th>Data</th>
                             <th>Tipo</th>
                             <th>Descrição</th>
+                            <th>Conta</th>
                             <th>Categoria</th>
                             <th>Pagamento</th>
                             <th>Valor</th>
@@ -135,7 +136,7 @@
                     </thead>
                     <tbody id="tbodyLancamentos">
                         <tr class="empty-row">
-                            <td colspan="8">
+                            <td colspan="9">
                                 <i class="ti ti-inbox"></i>
                                 <p>Nenhum lançamento encontrado</p>
                             </td>
@@ -176,6 +177,13 @@
             <div class="form-field">
                 <label>Descrição</label>
                 <input type="text" id="descricaoLancamento" placeholder="Ex: Salário, Aluguel..." />
+            </div>
+
+            <div class="form-field">
+                <label>Conta</label>
+                <select id="contaLancamento">
+                    <option value="">Sem conta vinculada</option>
+                </select>
             </div>
 
             <div class="form-row">

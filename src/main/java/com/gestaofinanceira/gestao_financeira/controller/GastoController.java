@@ -1,6 +1,7 @@
 package com.gestaofinanceira.gestao_financeira.controller;
 
-import com.gestaofinanceira.gestao_financeira.model.Gasto;
+import com.gestaofinanceira.gestao_financeira.dto.GastoRequestDTO;
+import com.gestaofinanceira.gestao_financeira.dto.GastoResponseDTO;
 import com.gestaofinanceira.gestao_financeira.service.GastoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +21,12 @@ public class GastoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Gasto>> listarUsuario(Authentication authentication) {
-        List<Gasto> gastos = gastoService.listar(authentication.getName());
-        return ResponseEntity.ok(gastos);
+    public ResponseEntity<List<GastoResponseDTO>> listarUsuario(Authentication authentication) {
+        return ResponseEntity.ok(gastoService.listar(authentication.getName()));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Gasto> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<GastoResponseDTO> buscarPorId(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(gastoService.buscarPorId(id));
         } catch (RuntimeException e) {
@@ -35,16 +35,16 @@ public class GastoController {
     }
 
     @PostMapping
-    public ResponseEntity<Gasto> salvar(@RequestBody Gasto gastoRecebido, Authentication authentication) {
-        Gasto gastoSalvo = gastoService.salvar(gastoRecebido, authentication.getName());
-        return ResponseEntity.status(HttpStatus.CREATED).body(gastoSalvo);
+    public ResponseEntity<GastoResponseDTO> salvar(@RequestBody GastoRequestDTO
+                                                               dto, Authentication authentication) {
+        GastoResponseDTO salvo = gastoService.salvar(dto, authentication.getName());
+        return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Gasto> atualizar(@PathVariable Long id, @RequestBody Gasto gastoAtualizado, Authentication authentication) {
+    public ResponseEntity<GastoResponseDTO> atualizar(@PathVariable Long id, @RequestBody GastoRequestDTO dto, Authentication authentication) {
         try {
-            Gasto gasto = gastoService.atualizarGasto(id, gastoAtualizado, authentication.getName());
-            return ResponseEntity.ok(gasto);
+            return ResponseEntity.ok(gastoService.atualizarGasto(id, dto, authentication.getName()));
         } catch (SecurityException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } catch (RuntimeException e) {

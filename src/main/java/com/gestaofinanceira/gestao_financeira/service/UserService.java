@@ -1,5 +1,6 @@
 package com.gestaofinanceira.gestao_financeira.service;
 
+import com.gestaofinanceira.gestao_financeira.dto.RegistroRequestDTO;
 import com.gestaofinanceira.gestao_financeira.model.User;
 import com.gestaofinanceira.gestao_financeira.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,21 +21,22 @@ public class UserService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // Spring Security validar o login
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findById(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email));
 
         return new org.springframework.security.core.userdetails.User(
-                user.getEmail(), 
-                user.getSenha(), 
-                new ArrayList<>() // Lista de autoridades/permissões
+                user.getEmail(),
+                user.getSenha(),
+                new ArrayList<>()
         );
     }
 
-    public void salvarUsuario(User user) {
-        user.setSenha(passwordEncoder.encode(user.getSenha()));
+    public void salvarUsuario(RegistroRequestDTO dto) {
+        User user = new User();
+        user.setEmail(dto.getEmail());
+        user.setSenha(passwordEncoder.encode(dto.getSenha()));
         userRepository.save(user);
     }
 }

@@ -5,6 +5,7 @@ let editandoId = null;
 document.addEventListener('DOMContentLoaded', () => {
     carregarLancamentos();
     carregarUsuario();
+    carregarContas();
     document.getElementById('dataLancamento').value = new Date().toISOString().split('T')[0];
 });
 
@@ -22,6 +23,31 @@ async function carregarUsuario() {
 }
 
 // ── API ──────────────────────────────────────────
+let todasContas = [];
+
+async function carregarContas() {
+    try {
+        const res = await fetch('/api/contas');
+        if (!res.ok) return;
+        todasContas = await res.json();
+        popularSelectContas();
+    } catch (e) {
+        console.error('Erro ao carregar contas:', e);
+    }
+}
+
+function popularSelectContas(contaIdSelecionada = null) {
+    const select = document.getElementById('contaLancamento');
+    select.innerHTML = '<option value="">Sem conta vinculada</option>';
+    todasContas.forEach(conta => {
+        const opt = document.createElement('option');
+        opt.value = conta.id;
+        opt.textContent = conta.nome || conta.tipoConta;
+        if (conta.id === contaIdSelecionada) opt.selected = true;
+        select.appendChild(opt);
+    });
+}
+
 async function carregarLancamentos() {
     try {
         const res = await fetch('/api/gastos');
@@ -40,6 +66,7 @@ async function carregarLancamentos() {
 async function salvarLancamento(e) {
     e.preventDefault();
 
+    const contaIdRaw = document.getElementById('contaLancamento').value;
     const body = {
         valor: parseFloat(document.getElementById('valorLancamento').value),
         descricao: document.getElementById('descricaoLancamento').value,
@@ -48,6 +75,7 @@ async function salvarLancamento(e) {
         statusLancamento: document.getElementById('statusLancamento').value,
         categoriaLancamento: document.getElementById('categoriaLancamento').value,
         pagamentoLancamento: document.getElementById('pagamentoLancamento').value,
+        contaId: contaIdRaw ? parseInt(contaIdRaw) : null,
     };
 
     const isEdicao = editandoId !== null;
@@ -127,6 +155,7 @@ function renderizarTabela(lista) {
             <td>${formatarData(l.data)}</td>
             <td>${badgeTipo(l.tipoLancamento)}</td>
             <td>${l.descricao || '—'}</td>
+            <td>${l.contaNome || '—'}</td>
             <td>${formatarCategoria(l.categoriaLancamento)}</td>
             <td>${formatarPagamento(l.pagamentoLancamento)}</td>
             <td style="font-weight:600; color:${l.tipoLancamento === 'RECEITA' ? '#16a34a' : '#dc2626'}">
@@ -179,6 +208,7 @@ function abrirModal() {
     document.getElementById('modalTitulo').textContent = 'Novo Lançamento';
     document.getElementById('formLancamento').reset();
     document.getElementById('dataLancamento').value = new Date().toISOString().split('T')[0];
+    popularSelectContas();
     document.getElementById('modalOverlay').classList.add('open');
 }
 
@@ -196,6 +226,7 @@ function abrirModalEdicao(id) {
     document.getElementById('categoriaLancamento').value  = l.categoriaLancamento;
     document.getElementById('statusLancamento').value     = l.statusLancamento;
     document.getElementById('pagamentoLancamento').value  = l.pagamentoLancamento;
+    popularSelectContas(l.contaId);
 
     document.getElementById('modalOverlay').classList.add('open');
 }

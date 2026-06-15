@@ -1,5 +1,6 @@
 package com.gestaofinanceira.gestao_financeira.controller;
 
+import com.gestaofinanceira.gestao_financeira.dto.LoginRequestDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @RestController
 @RequestMapping("/api")
 public class AuthController {
@@ -21,12 +20,12 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> loginData, HttpServletRequest request) {
+    public ResponseEntity<String> login(@RequestBody LoginRequestDTO loginData, HttpServletRequest request) {
         try {
             Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                    loginData.get("username"),
-                    loginData.get("password")
+                    loginData.getUsername(),
+                    loginData.getPassword()
                 )
             );
             SecurityContextHolder.getContext().setAuthentication(auth);

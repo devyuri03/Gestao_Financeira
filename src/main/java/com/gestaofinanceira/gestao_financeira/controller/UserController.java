@@ -1,6 +1,6 @@
 package com.gestaofinanceira.gestao_financeira.controller;
 
-import com.gestaofinanceira.gestao_financeira.model.User;
+import com.gestaofinanceira.gestao_financeira.dto.RegistroRequestDTO;
 import com.gestaofinanceira.gestao_financeira.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +17,8 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/registro")
-    public ResponseEntity<String> registrar(@RequestBody User user) {
-        userService.salvarUsuario(user);
+    public ResponseEntity<String> registrar(@RequestBody RegistroRequestDTO dto) {
+        userService.salvarUsuario(dto);
         return ResponseEntity.ok("Usuário registrado com sucesso!");
     }
 
