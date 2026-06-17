@@ -66,19 +66,87 @@ async function carregarLancamentos() {
 async function salvarLancamento(e) {
     e.preventDefault();
 
-    const contaIdRaw = document.getElementById('contaLancamento').value;
+    const isEdicao     = editandoId !== null;
+    const isParcelado  = !isEdicao && document.getElementById('chkParcelado').checked;
+    const numParcelas  = isParcelado ? parseInt(document.getElementById('numeroParcelas').value) : 1;
+
+    if (isParcelado && (!numParcelas || numParcelas < 2)) {
+        Swal.fire({ icon: 'warning', title: 'Atenção', text: 'Informe o número de parcelas (mínimo 2).', confirmButtonColor: '#6482d8' });
+        return;
+    }
+
+    const contaIdRaw  = document.getElementById('contaLancamento').value;
+    const valorTotal  = parseFloat(document.getElementById('valorLancamento').value);
+    const descricao   = document.getElementById('descricaoLancamento').value;
+    const dataBase    = document.getElementById('dataLancamento').value;
+    const tipo        = document.getElementById('tipoLancamento').value;
+    const status      = document.getElementById('statusLancamento').value;
+    const categoria   = document.getElementById('categoriaLancamento').value;
+    const pagamento   = document.getElementById('pagamentoLancamento').value;
+    const contaId     = contaIdRaw ? parseInt(contaIdRaw) : null;
+
+    if (isParcelado) {
+        const valorParcela = parseFloat((valorTotal / numParcelas).toFixed(2));
+        const hoje = new Date(); hoje.setHours(0, 0, 0, 0);
+        const erros = [];
+
+        for (let i = 0; i < numParcelas; i++) {
+            const [y, m, d] = dataBase.split('-').map(Number);
+            const dataParcela = new Date(y, m - 1 + i, d);
+            const statusParcela = dataParcela <= hoje ? 'PAGO' : 'PENDENTE';
+
+            const body = {
+                valor: valorParcela,
+                descricao: `${descricao} (${i + 1}/${numParcelas})`,
+                data: dataParcela.toISOString().split('T')[0],
+                tipoLancamento: tipo,
+                statusLancamento: statusParcela,
+                categoriaLancamento: categoria,
+                pagamentoLancamento: pagamento,
+                contaId,
+            };
+
+            try {
+                const res = await fetch('/api/gastos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                if (!res.ok) erros.push(i + 1);
+            } catch {
+                erros.push(i + 1);
+            }
+        }
+
+        fecharModal();
+        carregarLancamentos();
+
+        if (erros.length === 0) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Parcelado!',
+                text: `${numParcelas} parcelas criadas com sucesso.`,
+                confirmButtonColor: '#6482d8',
+                timer: 2500,
+                showConfirmButton: false
+            });
+        } else {
+            Swal.fire({ icon: 'warning', title: 'Parcial', text: `Erro ao criar parcelas: ${erros.join(', ')}.`, confirmButtonColor: '#6482d8' });
+        }
+        return;
+    }
+
     const body = {
-        valor: parseFloat(document.getElementById('valorLancamento').value),
-        descricao: document.getElementById('descricaoLancamento').value,
-        data: document.getElementById('dataLancamento').value,
-        tipoLancamento: document.getElementById('tipoLancamento').value,
-        statusLancamento: document.getElementById('statusLancamento').value,
-        categoriaLancamento: document.getElementById('categoriaLancamento').value,
-        pagamentoLancamento: document.getElementById('pagamentoLancamento').value,
-        contaId: contaIdRaw ? parseInt(contaIdRaw) : null,
+        valor: valorTotal,
+        descricao,
+        data: dataBase,
+        tipoLancamento: tipo,
+        statusLancamento: status,
+        categoriaLancamento: categoria,
+        pagamentoLancamento: pagamento,
+        contaId,
     };
 
-    const isEdicao = editandoId !== null;
     const url    = isEdicao ? `/api/gastos/${editandoId}` : '/api/gastos';
     const method = isEdicao ? 'PUT' : 'POST';
 
@@ -175,14 +243,11 @@ function renderizarTabela(lista) {
 }
 
 function atualizarCards(lista) {
-    const receitas  = lista.filter(l => l.tipoLancamento === 'RECEITA').reduce((s, l) => s + parseFloat(l.valor), 0);
-    const despesas  = lista.filter(l => l.tipoLancamento === 'DESPESA').reduce((s, l) => s + parseFloat(l.valor), 0);
-    const saldo     = receitas - despesas;
+    const receitas = lista.filter(l => l.tipoLancamento === 'RECEITA').reduce((s, l) => s + parseFloat(l.valor), 0);
+    const despesas = lista.filter(l => l.tipoLancamento === 'DESPESA').reduce((s, l) => s + parseFloat(l.valor), 0);
 
-    document.getElementById('totalReceitas').textContent   = formatarValor(receitas);
-    document.getElementById('totalDespesas').textContent   = formatarValor(despesas);
-    document.getElementById('saldo').textContent           = formatarValor(saldo);
-    document.getElementById('saldo').className             = 'summary-value ' + (saldo >= 0 ? 'positive' : 'negative');
+    document.getElementById('totalReceitas').textContent    = formatarValor(receitas);
+    document.getElementById('totalDespesas').textContent    = formatarValor(despesas);
     document.getElementById('totalLancamentos').textContent = lista.length;
 }
 
@@ -202,12 +267,37 @@ function filtrarTabela() {
     renderizarTabela(filtrado);
 }
 
+// ── Parcelado ────────────────────────────────────
+function onPagamentoChange() {
+    const pagamento = document.getElementById('pagamentoLancamento').value;
+    const isCredito = pagamento === 'CARTAO_CREDITO';
+    document.getElementById('parceladoGroup').style.display = isCredito ? '' : 'none';
+    if (!isCredito) {
+        document.getElementById('chkParcelado').checked = false;
+        document.getElementById('parcelasGroup').style.display = 'none';
+    }
+}
+
+function toggleParcelas() {
+    const checked = document.getElementById('chkParcelado').checked;
+    document.getElementById('parcelasGroup').style.display = checked ? '' : 'none';
+    if (checked) document.getElementById('numeroParcelas').focus();
+}
+
+function resetarParcelado() {
+    document.getElementById('parceladoGroup').style.display = 'none';
+    document.getElementById('parcelasGroup').style.display  = 'none';
+    document.getElementById('chkParcelado').checked         = false;
+    document.getElementById('numeroParcelas').value         = '';
+}
+
 // ── Modal ────────────────────────────────────────
 function abrirModal() {
     editandoId = null;
     document.getElementById('modalTitulo').textContent = 'Novo Lançamento';
     document.getElementById('formLancamento').reset();
     document.getElementById('dataLancamento').value = new Date().toISOString().split('T')[0];
+    resetarParcelado();
     popularSelectContas();
     document.getElementById('modalOverlay').classList.add('open');
 }
@@ -226,6 +316,7 @@ function abrirModalEdicao(id) {
     document.getElementById('categoriaLancamento').value  = l.categoriaLancamento;
     document.getElementById('statusLancamento').value     = l.statusLancamento;
     document.getElementById('pagamentoLancamento').value  = l.pagamentoLancamento;
+    resetarParcelado();
     popularSelectContas(l.contaId);
 
     document.getElementById('modalOverlay').classList.add('open');
@@ -234,6 +325,7 @@ function abrirModalEdicao(id) {
 function fecharModal() {
     document.getElementById('modalOverlay').classList.remove('open');
     editandoId = null;
+    resetarParcelado();
 }
 
 function fecharModalFora(e) {

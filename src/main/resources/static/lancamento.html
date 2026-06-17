@@ -83,13 +83,6 @@
                     </div>
                 </div>
                 <div class="summary-card">
-                    <div class="summary-icon icon-blue"><i class="ti ti-scale"></i></div>
-                    <div class="summary-info">
-                        <span class="summary-label">Saldo</span>
-                        <span class="summary-value" id="saldo">R$ 0,00</span>
-                    </div>
-                </div>
-                <div class="summary-card">
                     <div class="summary-icon icon-purple"><i class="ti ti-list-numbers"></i></div>
                     <div class="summary-info">
                         <span class="summary-label">Lançamentos</span>
@@ -219,7 +212,7 @@
                 </div>
                 <div class="form-field">
                     <label>Forma de Pagamento</label>
-                    <select id="pagamentoLancamento" required>
+                    <select id="pagamentoLancamento" required onchange="onPagamentoChange()">
                         <option value="">Selecione...</option>
                         <option value="PIX">Pix</option>
                         <option value="CARTAO_CREDITO">Cartão de Crédito</option>
@@ -228,6 +221,19 @@
                         <option value="BOLETO">Boleto</option>
                     </select>
                 </div>
+            </div>
+
+            <div class="form-field parcelado-group" id="parceladoGroup" style="display:none">
+                <label class="parcelado-label">
+                    <input type="checkbox" id="chkParcelado" onchange="toggleParcelas()">
+                    Parcelado no crédito
+                </label>
+            </div>
+
+            <div class="form-field" id="parcelasGroup" style="display:none">
+                <label>Número de Parcelas</label>
+                <input type="number" id="numeroParcelas" min="2" max="48" placeholder="Ex: 12" />
+                <span class="parcelas-hint">Status por parcela: PAGO (passadas) ou PENDENTE (futuras)</span>
             </div>
 
             <div class="modal-actions">

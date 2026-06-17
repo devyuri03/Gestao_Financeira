@@ -68,14 +68,10 @@ function renderizarTabela(dados) {
 
   if (dados.length === 0) {
     tbody.innerHTML = `
-      <tr>
+      <tr class="empty-row">
         <td colspan="6">
-          <div class="empty-state">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-            </svg>
-            Nenhum lançamento encontrado para este período
-          </div>
+          <i class="ti ti-inbox"></i>
+          <p>Nenhum lançamento encontrado para este período</p>
         </td>
       </tr>`;
     return;
@@ -111,7 +107,7 @@ function atualizarResumo(dados) {
   document.getElementById('resumoResultado').textContent = (resultado >= 0 ? '+' : '') + fmt(resultado);
 
   const elResultado = document.getElementById('resumoResultado');
-  elResultado.className = 'stat-value ' + (resultado >= 0 ? 'green' : 'red');
+  elResultado.className = 'summary-value ' + (resultado >= 0 ? 'positive' : 'negative');
 }
 
 // ── Logout ────────────────────────────────────────
