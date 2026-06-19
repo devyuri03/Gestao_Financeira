@@ -3,6 +3,7 @@ package com.gestaofinanceira.gestao_financeira.controller;
 import com.gestaofinanceira.gestao_financeira.dto.ContaRequestDTO;
 import com.gestaofinanceira.gestao_financeira.dto.ContaResponseDTO;
 import com.gestaofinanceira.gestao_financeira.service.ContaService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -37,13 +38,13 @@ public class ContaController {
     }
 
     @PostMapping
-    public ResponseEntity<ContaResponseDTO> salvar(@RequestBody ContaRequestDTO dto, Authentication authentication) {
+    public ResponseEntity<ContaResponseDTO> salvar(@Valid @RequestBody ContaRequestDTO dto, Authentication authentication) {
         ContaResponseDTO salvo = contaService.salvar(dto, authentication.getName());
         return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ContaResponseDTO> atualizar(@PathVariable Long id, @RequestBody ContaRequestDTO dto, Authentication authentication) {
+    public ResponseEntity<ContaResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody ContaRequestDTO dto, Authentication authentication) {
         try {
             return ResponseEntity.ok(contaService.atualizar(id, dto, authentication.getName()));
         } catch (SecurityException e) {

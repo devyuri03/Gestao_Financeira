@@ -226,8 +226,8 @@ function renderizarTabela(lista) {
             <td>${l.contaNome || '—'}</td>
             <td>${formatarCategoria(l.categoriaLancamento)}</td>
             <td>${formatarPagamento(l.pagamentoLancamento)}</td>
-            <td style="font-weight:600; color:${l.tipoLancamento === 'RECEITA' ? '#16a34a' : '#dc2626'}">
-                ${l.tipoLancamento === 'RECEITA' ? '+' : '-'} ${formatarValor(l.valor)}
+            <td style="font-weight:600; color:${l.tipoLancamento === 'RECEITA' ? '#16a34a' : l.tipoLancamento === 'DESPESA' ? '#dc2626' : '#6b7280'}">
+                ${l.tipoLancamento === 'RECEITA' ? '+' : l.tipoLancamento === 'DESPESA' ? '-' : '⇄'} ${formatarValor(l.valor)}
             </td>
             <td>${badgeStatus(l.statusLancamento)}</td>
             <td>

@@ -2,7 +2,8 @@ package com.gestaofinanceira.gestao_financeira.controller;
 
 import com.gestaofinanceira.gestao_financeira.dto.RegistroRequestDTO;
 import com.gestaofinanceira.gestao_financeira.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -13,13 +14,20 @@ import java.util.Map;
 @RequestMapping("/api/usuarios")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/registro")
-    public ResponseEntity<String> registrar(@RequestBody RegistroRequestDTO dto) {
-        userService.salvarUsuario(dto);
-        return ResponseEntity.ok("Usuário registrado com sucesso!");
+    public ResponseEntity<String> registrar(@Valid @RequestBody RegistroRequestDTO dto) {
+        try {
+            userService.salvarUsuario(dto);
+            return ResponseEntity.ok("Usuário registrado com sucesso!");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
     }
 
     @GetMapping("/me")

@@ -3,6 +3,7 @@ package com.gestaofinanceira.gestao_financeira.service;
 import com.gestaofinanceira.gestao_financeira.dto.FluxoCaixaMesDTO;
 import com.gestaofinanceira.gestao_financeira.enums.StatusLancamento;
 import com.gestaofinanceira.gestao_financeira.enums.TipoLancamento;
+import com.gestaofinanceira.gestao_financeira.model.Conta;
 import com.gestaofinanceira.gestao_financeira.model.Gasto;
 import com.gestaofinanceira.gestao_financeira.repository.ContaRepository;
 import com.gestaofinanceira.gestao_financeira.repository.GastoRepository;
@@ -29,27 +30,29 @@ public class FluxoCaixaService {
     }
 
     public List<FluxoCaixaMesDTO> calcular(String email) {
-        // Saldo base = soma dos saldos iniciais de todas as contas
         BigDecimal saldoBase = contaRepository.findByUsuarioEmail(email)
                 .stream()
-                .map(c -> BigDecimal.valueOf(c.getSaldo()))
+                .map(Conta::getSaldo)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        // Gastos ativos (exclui cancelados)
         List<Gasto> gastos = gastoRepository.findByUsuarioEmail(email)
                 .stream()
                 .filter(g -> g.getStatusLancamento() != StatusLancamento.CANCELADO)
                 .toList();
 
-        if (gastos.isEmpty()) return List.of();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.of("pt", "BR"));
 
-        // Agrupa por mês/ano
+        if (gastos.isEmpty()) {
+            if (saldoBase.compareTo(BigDecimal.ZERO) == 0) return List.of();
+            String nomeMes = formatarNomeMes(YearMonth.now(), formatter);
+            return List.of(new FluxoCaixaMesDTO(
+                    nomeMes, saldoBase, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, saldoBase));
+        }
+
         Map<YearMonth, List<Gasto>> porMes = gastos.stream()
                 .collect(Collectors.groupingBy(g -> YearMonth.from(g.getData())));
 
         List<YearMonth> meses = porMes.keySet().stream().sorted().toList();
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy", new Locale("pt", "BR"));
 
         BigDecimal saldoCorrente = saldoBase;
         List<FluxoCaixaMesDTO> resultado = new ArrayList<>();
@@ -70,11 +73,8 @@ public class FluxoCaixaService {
             BigDecimal resultadoMes = receitas.subtract(despesas);
             BigDecimal saldoFinal   = saldoCorrente.add(resultadoMes);
 
-            String nomeMes = mes.format(formatter);
-            nomeMes = Character.toUpperCase(nomeMes.charAt(0)) + nomeMes.substring(1);
-
             resultado.add(new FluxoCaixaMesDTO(
-                    nomeMes,
+                    formatarNomeMes(mes, formatter),
                     saldoCorrente,
                     receitas,
                     despesas,
@@ -86,5 +86,10 @@ public class FluxoCaixaService {
         }
 
         return resultado;
+    }
+
+    private String formatarNomeMes(YearMonth mes, DateTimeFormatter formatter) {
+        String nome = mes.format(formatter);
+        return Character.toUpperCase(nome.charAt(0)) + nome.substring(1);
     }
 }

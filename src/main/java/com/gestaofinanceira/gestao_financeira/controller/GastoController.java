@@ -3,6 +3,7 @@ package com.gestaofinanceira.gestao_financeira.controller;
 import com.gestaofinanceira.gestao_financeira.dto.GastoRequestDTO;
 import com.gestaofinanceira.gestao_financeira.dto.GastoResponseDTO;
 import com.gestaofinanceira.gestao_financeira.service.GastoService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -26,23 +27,24 @@ public class GastoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<GastoResponseDTO> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<GastoResponseDTO> buscarPorId(@PathVariable Long id, Authentication authentication) {
         try {
-            return ResponseEntity.ok(gastoService.buscarPorId(id));
+            return ResponseEntity.ok(gastoService.buscarPorId(id, authentication.getName()));
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
     @PostMapping
-    public ResponseEntity<GastoResponseDTO> salvar(@RequestBody GastoRequestDTO
-                                                               dto, Authentication authentication) {
+    public ResponseEntity<GastoResponseDTO> salvar(@Valid @RequestBody GastoRequestDTO dto, Authentication authentication) {
         GastoResponseDTO salvo = gastoService.salvar(dto, authentication.getName());
         return ResponseEntity.status(HttpStatus.CREATED).body(salvo);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GastoResponseDTO> atualizar(@PathVariable Long id, @RequestBody GastoRequestDTO dto, Authentication authentication) {
+    public ResponseEntity<GastoResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody GastoRequestDTO dto, Authentication authentication) {
         try {
             return ResponseEntity.ok(gastoService.atualizarGasto(id, dto, authentication.getName()));
         } catch (SecurityException e) {

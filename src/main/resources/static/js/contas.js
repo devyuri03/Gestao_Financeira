@@ -3,12 +3,12 @@ let editandoId = null;
 let selectedType = 'CONTA_CORRENTE';
 
 const TIPO_INFO = {
-  CONTA_CORRENTE: { label: 'Conta Corrente',    emoji: '🏦', bg: '#dbeafe' },
-  CONTA_POUPANCA: { label: 'Poupança',           emoji: '💰', bg: '#dbeafe' },
-  CARTAO_CREDITO: { label: 'Cartão de Crédito',  emoji: '💳', bg: '#ede9fe' },
-  INVESTIMENTO:   { label: 'Investimento',        emoji: '📈', bg: '#dcfce7' },
-  DINHEIRO:       { label: 'Dinheiro',            emoji: '💵', bg: '#fef9c3' },
-  OUTRO:          { label: 'Outro',               emoji: '📂', bg: '#f3f4f6' },
+  CONTA_CORRENTE: { label: 'Conta Corrente',    icon: 'ti-building-bank', bg: '#dbeafe', color: '#2563eb' },
+  CONTA_POUPANCA: { label: 'Poupança',           icon: 'ti-piggy-bank',   bg: '#dcfce7', color: '#16a34a' },
+  CARTAO_CREDITO: { label: 'Cartão de Crédito',  icon: 'ti-credit-card',  bg: '#ede9fe', color: '#7c3aed' },
+  INVESTIMENTO:   { label: 'Investimento',        icon: 'ti-chart-line',   bg: '#d1fae5', color: '#059669' },
+  DINHEIRO:       { label: 'Dinheiro',            icon: 'ti-cash',         bg: '#fef9c3', color: '#ca8a04' },
+  OUTRO:          { label: 'Outro',               icon: 'ti-folder',       bg: '#f1f5f9', color: '#64748b' },
 };
 
 // ── Inicialização ─────────────────────────────────
@@ -117,22 +117,16 @@ function renderizarContas() {
     card.innerHTML = `
       <div class="account-card-actions">
         <button class="icon-btn" onclick="editarConta(${conta.id})" title="Editar">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2">
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-          </svg>
+          <i class="ti ti-pencil" style="font-size:16px;color:#3b82f6"></i>
         </button>
         <button class="icon-btn" onclick="deletarConta(${conta.id})" title="Excluir">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2">
-            <polyline points="3 6 5 6 21 6"/>
-            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-            <path d="M10 11v6"/><path d="M14 11v6"/>
-            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
-          </svg>
+          <i class="ti ti-trash" style="font-size:16px;color:#ef4444"></i>
         </button>
       </div>
       <div class="account-header">
-        <div class="account-icon" style="background:${info.bg}">${info.emoji}</div>
+        <div class="account-icon" style="background:${info.bg};color:${info.color}">
+          <i class="ti ${info.icon}"></i>
+        </div>
         <div>
           <div class="account-name">${conta.nome || info.label}</div>
           <div class="account-type">${info.label}</div>
@@ -146,12 +140,7 @@ function renderizarContas() {
   const addCard = document.createElement('div');
   addCard.className = 'add-account-card';
   addCard.onclick = abrirModal;
-  addCard.innerHTML = `
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-    </svg>
-    Adicionar nova conta
-  `;
+  addCard.innerHTML = `<i class="ti ti-plus"></i> Adicionar nova conta`;
   grid.appendChild(addCard);
 }
 

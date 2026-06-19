@@ -32,9 +32,12 @@ public class GastoService {
                 .toList();
     }
 
-    public GastoResponseDTO buscarPorId(Long id) {
+    public GastoResponseDTO buscarPorId(Long id, String email) {
         Gasto gasto = gastoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Gasto não encontrado com o ID: " + id));
+        if (!gasto.getUsuario().getEmail().equals(email)) {
+            throw new SecurityException("Acesso negado");
+        }
         return toDTO(gasto);
     }
 

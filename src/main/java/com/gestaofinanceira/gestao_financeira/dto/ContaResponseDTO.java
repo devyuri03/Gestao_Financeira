@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 public class ContaResponseDTO {
     private Long id;
     private String nome;
-    private double saldo;
+    private BigDecimal saldo;
     private Double limite;
     private TipoConta tipoConta;
     private String usuarioEmail;

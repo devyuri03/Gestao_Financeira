@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 
 @Entity
 @Data
@@ -23,7 +24,7 @@ public class Conta {
     private String nome;
 
     @Column(nullable = false)
-    private double saldo;
+    private BigDecimal saldo;
 
     @Column
     private Double limite;

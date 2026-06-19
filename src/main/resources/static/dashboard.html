@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard — Gestão Financeira</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="/css/dashboard.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="app">
+
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon"><i class="ti ti-pig-money"></i></div>
+            <span>Gestão Financeira</span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <span class="nav-section">Principal</span>
+            <a class="nav-item active" href="/dashboard.html"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
+            <a class="nav-item" href="/lancamento.html"><i class="ti ti-arrows-right-left"></i> Lançamentos</a>
+            <a class="nav-item" href="/contas.html"><i class="ti ti-wallet"></i> Contas</a>
+            <a class="nav-item" href="#"><i class="ti ti-target"></i> Orçamento</a>
+
+            <span class="nav-section">Análise</span>
+            <a class="nav-item" href="/fluxo.html"><i class="ti ti-trending-up"></i> Fluxo de Caixa</a>
+            <a class="nav-item" href="#"><i class="ti ti-file-analytics"></i> Relatórios</a>
+            <a class="nav-item" href="#"><i class="ti ti-chart-line"></i> Investimentos</a>
+
+            <span class="nav-section">Outros</span>
+            <a class="nav-item" href="#"><i class="ti ti-settings"></i> Configurações</a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-avatar">--</div>
+            <div class="user-info">
+                <span class="user-name">Meu Perfil</span>
+                <span class="user-email" id="sidebarEmail">—</span>
+            </div>
+            <button class="btn-logout" onclick="logout()" title="Sair">
+                <i class="ti ti-logout"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- ── Main ── -->
+    <main class="main">
+
+        <div class="topbar">
+            <div class="topbar-title">
+                <h1>Dashboard</h1>
+                <p id="subtitulo">Carregando...</p>
+            </div>
+        </div>
+
+        <div class="content">
+
+            <!-- KPI Cards -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-icon icon-blue"><i class="ti ti-wallet"></i></div>
+                    <div class="kpi-info">
+                        <span class="kpi-label">Saldo Total</span>
+                        <span class="kpi-value" id="saldoTotal">—</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon icon-green"><i class="ti ti-trending-up"></i></div>
+                    <div class="kpi-info">
+                        <span class="kpi-label">Receitas do Mês</span>
+                        <span class="kpi-value positive" id="receitasMes">—</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon icon-red"><i class="ti ti-trending-down"></i></div>
+                    <div class="kpi-info">
+                        <span class="kpi-label">Despesas do Mês</span>
+                        <span class="kpi-value negative" id="despesasMes">—</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon icon-purple"><i class="ti ti-scale"></i></div>
+                    <div class="kpi-info">
+                        <span class="kpi-label">Resultado do Mês</span>
+                        <span class="kpi-value" id="resultadoMes">—</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon icon-yellow"><i class="ti ti-clock"></i></div>
+                    <div class="kpi-info">
+                        <span class="kpi-label">Pendentes</span>
+                        <span class="kpi-value" id="pendentes">—</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Middle: Chart + Contas -->
+            <div class="middle-grid">
+
+                <div class="dash-card">
+                    <div class="dash-card-header">
+                        <span class="dash-card-title">Despesas por Categoria</span>
+                        <span class="dash-card-sub" id="mesChart">—</span>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="categoriaChart"></canvas>
+                        <div class="chart-empty" id="chartEmpty">
+                            <i class="ti ti-chart-donut"></i>
+                            <p>Sem despesas no mês</p>
+                        </div>
+                    </div>
+                    <div class="legend" id="categoriaLegend"></div>
+                </div>
+
+                <div class="dash-card">
+                    <div class="dash-card-header">
+                        <span class="dash-card-title">Minhas Contas</span>
+                        <a href="/contas.html" class="dash-card-link">Ver todas <i class="ti ti-arrow-right"></i></a>
+                    </div>
+                    <div class="accounts-list" id="accountsList">
+                        <div class="empty-state">
+                            <i class="ti ti-wallet"></i>
+                            <p>Nenhuma conta cadastrada</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Lançamentos Recentes -->
+            <div class="dash-card">
+                <div class="dash-card-header">
+                    <span class="dash-card-title">Lançamentos Recentes</span>
+                    <a href="/lancamento.html" class="dash-card-link">Ver todos <i class="ti ti-arrow-right"></i></a>
+                </div>
+                <div class="table-card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Tipo</th>
+                                <th>Descrição</th>
+                                <th>Categoria</th>
+                                <th>Conta</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentesBody">
+                            <tr class="empty-row">
+                                <td colspan="7">
+                                    <i class="ti ti-inbox"></i>
+                                    <p>Nenhum lançamento encontrado</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script src="/js/dashboard.js"></script>
+</body>
+</html>
