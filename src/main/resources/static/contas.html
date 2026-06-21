@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <link rel="stylesheet" href="/css/contas.css" />
+  <link rel="stylesheet" href="/css/mobile.css" />
 </head>
 <body>
 <div class="app">
@@ -53,6 +54,7 @@
   <div class="main">
 
     <div class="topbar">
+      <button class="btn-hamburger" onclick="toggleSidebar()"><i class="ti ti-menu-2"></i></button>
       <div class="topbar-title">
         <h1>Contas</h1>
         <p>Gerencie suas contas bancárias e cartões</p>
@@ -160,6 +162,8 @@
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 <script src="/js/contas.js"></script>
+<script src="/js/mobile.js"></script>
 </body>
 </html>

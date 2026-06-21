@@ -1,0 +1,60 @@
+/* ── Hamburger button (hidden on desktop) ── */
+.btn-hamburger {
+    display: none;
+    background: none;
+    border: none;
+    color: #475569;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 8px;
+    align-items: center;
+    flex-shrink: 0;
+    transition: background 0.15s;
+}
+.btn-hamburger:hover { background: #f1f5f9; }
+
+/* ── Dark overlay behind sidebar ── */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 40;
+    cursor: pointer;
+}
+
+/* ── Mobile breakpoint ── */
+@media (max-width: 768px) {
+
+    .btn-hamburger { display: flex; }
+
+    /* Sidebar vira drawer fixo fora da tela */
+    .sidebar {
+        position: fixed !important;
+        top: 0; left: 0; bottom: 0;
+        z-index: 50;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        overflow-y: auto;
+    }
+
+    .sidebar.open { transform: translateX(0); }
+
+    /* Overlay aparece quando sidebar está aberta */
+    .sidebar-overlay.open { display: block; }
+
+    /* Conteúdo principal ocupa 100% da largura */
+    .main { width: 100%; }
+
+    /* Topbar: hambúrguer + título lado a lado */
+    .topbar {
+        padding: 14px 16px !important;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .topbar-title h1 { font-size: 17px !important; }
+    .topbar-title p  { font-size: 12px !important; }
+}

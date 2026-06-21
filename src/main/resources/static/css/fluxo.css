@@ -372,3 +372,17 @@ td.negativo { color: #dc2626; font-weight: 600; }
 
 .saldo-badge.pos { background: #dcfce7; color: #16a34a; }
 .saldo-badge.neg { background: #fee2e2; color: #dc2626; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+    .content { padding: 16px; }
+    .summary-cards { grid-template-columns: 1fr; gap: 10px; margin-bottom: 16px; }
+    .filters { flex-wrap: wrap; }
+    .select-filter { min-width: unset; flex: 1; }
+    .table-card { overflow-x: auto; }
+}
+
+@media (max-width: 480px) {
+    .summary-card { padding: 14px; }
+    .summary-value { font-size: 16px; }
+}
