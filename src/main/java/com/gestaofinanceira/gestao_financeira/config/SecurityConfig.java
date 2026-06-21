@@ -1,5 +1,6 @@
 package com.gestaofinanceira.gestao_financeira.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,12 +23,21 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/css/**", "/js/**").permitAll()
-                        .requestMatchers("/", "/login.html", "/registro.html", "/api/login", "/api/usuarios/registro", "/login").permitAll()
+                        .requestMatchers("/", "/login", "/registro", "/api/login", "/api/usuarios/registro").permitAll()
                         .anyRequest().authenticated()
+                )
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((req, res, e) -> {
+                            if (req.getRequestURI().startsWith("/api/")) {
+                                res.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                            } else {
+                                res.sendRedirect("/login");
+                            }
+                        })
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login.html")
+                        .logoutSuccessUrl("/login")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .permitAll()

@@ -37,7 +37,7 @@ async function carregarContas() {
   try {
     const res = await fetch('/api/contas');
     if (res.status === 401 || res.status === 403) {
-      window.location.href = '/login.html';
+      window.location.href = '/login';
       return;
     }
     todasContas = await res.json();
@@ -264,7 +264,7 @@ function setType(type) {
 // ── Logout ────────────────────────────────────────
 async function logout() {
   await fetch('/logout', { method: 'POST' });
-  window.location.href = '/login.html';
+  window.location.href = '/login';
 }
 
 // ── Helpers ───────────────────────────────────────

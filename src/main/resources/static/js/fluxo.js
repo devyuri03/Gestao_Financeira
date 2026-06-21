@@ -25,7 +25,7 @@ async function carregarFluxo() {
   try {
     const res = await fetch('/api/fluxo-caixa');
     if (res.status === 401 || res.status === 403) {
-      window.location.href = '/login.html';
+      window.location.href = '/login';
       return;
     }
     todosOsDados = await res.json();
@@ -113,7 +113,7 @@ function atualizarResumo(dados) {
 // ── Logout ────────────────────────────────────────
 async function logout() {
   await fetch('/logout', { method: 'POST' });
-  window.location.href = '/login.html';
+  window.location.href = '/login';
 }
 
 // ── Helper ────────────────────────────────────────

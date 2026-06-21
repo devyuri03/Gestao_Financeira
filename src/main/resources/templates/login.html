@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criar Conta — Gestão Financeira</title>
+    <title>Login — Gestão Financeira</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -25,21 +25,21 @@
         </div>
 
         <div class="hero-text">
-            <h1>Comece sua<br>jornada<br>financeira</h1>
-            <p>Crie sua conta gratuita e tenha controle total sobre suas finanças pessoais.</p>
+            <h1>Controle suas<br>finanças com<br>inteligência</h1>
+            <p>Acompanhe receitas, despesas e investimentos em um só lugar de forma simples e eficiente.</p>
         </div>
 
         <div class="deco-cards">
             <div class="deco-card">
-                <div class="deco-card-label">Meta de economia</div>
-                <div class="deco-card-value positive">R$ 5.000,00</div>
+                <div class="deco-card-label">Saldo do mês</div>
+                <div class="deco-card-value positive">+ R$ 2.450,00</div>
                 <div class="deco-card-bar">
-                    <div class="deco-card-bar-fill" style="width: 42%"></div>
+                    <div class="deco-card-bar-fill" style="width: 68%"></div>
                 </div>
             </div>
             <div class="deco-card deco-card-sm">
-                <div class="deco-card-label">Progresso</div>
-                <div class="deco-card-value positive">42% concluído</div>
+                <div class="deco-card-label">Total de despesas</div>
+                <div class="deco-card-value negative">- R$ 1.230,00</div>
             </div>
         </div>
     </div>
@@ -49,42 +49,42 @@
         <div class="form-card">
 
             <div class="form-header">
-                <h2>Criar conta</h2>
-                <p>Preencha os dados para começar</p>
+                <h2>Bem-vindo de volta</h2>
+                <p>Faça login para acessar sua conta</p>
             </div>
 
-            <form id="registroForm" onsubmit="return false;">
+            <form id="loginForm" onsubmit="return false;">
                 <div class="field">
-                    <label for="email">Email</label>
+                    <label for="username">Email</label>
                     <div class="input-wrap">
                         <i class="ti ti-mail"></i>
-                        <input type="email" id="email"
+                        <input type="email" id="username" name="username"
                                placeholder="seu@email.com" required autocomplete="email">
                     </div>
                 </div>
 
                 <div class="field">
-                    <label for="senha">Senha</label>
+                    <label for="password">Senha</label>
                     <div class="input-wrap">
                         <i class="ti ti-lock"></i>
-                        <input type="password" id="senha"
-                               placeholder="••••••••" required autocomplete="new-password">
+                        <input type="password" id="password" name="password"
+                               placeholder="••••••••" required autocomplete="current-password">
                     </div>
                 </div>
 
                 <div class="error-msg" id="errorMsg">
                     <i class="ti ti-alert-circle"></i>
-                    Erro ao criar conta. Tente novamente.
+                    Email ou senha incorretos.
                 </div>
 
-                <button type="button" class="btn-submit" onclick="realizarRegistro()">
-                    Criar conta
+                <button type="button" class="btn-submit" onclick="realizarLogin()">
+                    Entrar
                     <i class="ti ti-arrow-right"></i>
                 </button>
             </form>
 
             <p class="alt-link">
-                Já tem uma conta? <a href="/login.html">Fazer login</a>
+                Ainda não tem conta? <a href="/registro">Criar conta</a>
             </p>
 
         </div>

@@ -16,7 +16,7 @@ async function realizarLogin() {
         });
 
         if (res.ok) {
-            window.location.href = '/lancamento.html';
+            window.location.href = '/lancamento';
         } else {
             Swal.fire({ icon: 'error', title: 'Acesso negado', text: 'Email ou senha incorretos.', confirmButtonColor: '#6482d8' });
         }
@@ -44,7 +44,7 @@ async function realizarRegistro() {
 
         if (res.ok) {
             await Swal.fire({ icon: 'success', title: 'Conta criada!', text: 'Faça login para continuar.', confirmButtonColor: '#6482d8' });
-            window.location.href = '/login.html';
+            window.location.href = '/login';
         } else {
             const texto = await lerErro(res);
             Swal.fire({ icon: 'error', title: 'Erro ao criar conta', text: texto, confirmButtonColor: '#6482d8' });

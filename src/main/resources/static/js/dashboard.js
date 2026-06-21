@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 async function carregarUsuario() {
     try {
         const res = await fetch('/api/usuarios/me');
-        if (!res.ok) { window.location.href = '/login.html'; return; }
+        if (!res.ok) { window.location.href = '/login'; return; }
         const { email } = await res.json();
         document.getElementById('sidebarEmail').textContent = email;
         document.querySelector('.user-avatar').textContent = email.substring(0, 2).toUpperCase();
@@ -60,7 +60,7 @@ async function carregarDashboard() {
     try {
         const res = await fetch('/api/dashboard');
         if (res.status === 401 || res.status === 403) {
-            window.location.href = '/login.html';
+            window.location.href = '/login';
             return;
         }
         const d = await res.json();
@@ -209,7 +209,7 @@ function renderRecentes(lancamentos) {
 
 async function logout() {
     await fetch('/logout', { method: 'POST' });
-    window.location.href = '/login.html';
+    window.location.href = '/login';
 }
 
 function formatVal(v) {

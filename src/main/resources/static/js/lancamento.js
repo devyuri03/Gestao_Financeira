@@ -52,7 +52,7 @@ async function carregarLancamentos() {
     try {
         const res = await fetch('/api/gastos');
         if (res.status === 401 || res.status === 403) {
-            window.location.href = '/login.html';
+            window.location.href = '/login';
             return;
         }
         todosLancamentos = await res.json();
@@ -335,7 +335,7 @@ function fecharModalFora(e) {
 // ── Logout ───────────────────────────────────────
 async function logout() {
     await fetch('/logout', { method: 'POST' });
-    window.location.href = '/login.html';
+    window.location.href = '/login';
 }
 
 // ── Helpers ──────────────────────────────────────
