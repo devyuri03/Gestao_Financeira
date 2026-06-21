@@ -22,7 +22,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/css/**", "/js/**").permitAll()
-                        .requestMatchers("/login.html", "/registro.html", "/api/login", "/api/usuarios/registro", "/login").permitAll()
+                        .requestMatchers("/", "/login.html", "/registro.html", "/api/login", "/api/usuarios/registro", "/login").permitAll()
                         .anyRequest().authenticated()
                 )
                 .logout(logout -> logout
