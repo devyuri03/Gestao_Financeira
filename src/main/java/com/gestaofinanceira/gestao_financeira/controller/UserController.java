@@ -1,7 +1,10 @@
 package com.gestaofinanceira.gestao_financeira.controller;
 
+import com.gestaofinanceira.gestao_financeira.dto.AlterarSenhaRequestDTO;
 import com.gestaofinanceira.gestao_financeira.dto.RegistroRequestDTO;
 import com.gestaofinanceira.gestao_financeira.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,5 +36,25 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<Map<String, String>> me(Authentication authentication) {
         return ResponseEntity.ok(Map.of("email", authentication.getName()));
+    }
+
+    @PutMapping("/senha")
+    public ResponseEntity<String> alterarSenha(@Valid @RequestBody AlterarSenhaRequestDTO dto,
+                                               Authentication authentication) {
+        try {
+            userService.alterarSenha(authentication.getName(), dto.getSenhaAtual(), dto.getSenhaNova());
+            return ResponseEntity.ok("Senha alterada com sucesso!");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/me")
+    public ResponseEntity<String> deletarConta(Authentication authentication,
+                                               HttpServletRequest request) {
+        userService.deletarConta(authentication.getName());
+        HttpSession session = request.getSession(false);
+        if (session != null) session.invalidate();
+        return ResponseEntity.ok("Conta excluída com sucesso.");
     }
 }

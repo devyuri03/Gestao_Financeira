@@ -43,4 +43,21 @@ public class UserService implements UserDetailsService {
         user.setSenha(passwordEncoder.encode(dto.getSenha()));
         userRepository.save(user);
     }
+
+    public void alterarSenha(String email, String senhaAtual, String senhaNova) {
+        User user = userRepository.findById(email)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        if (!passwordEncoder.matches(senhaAtual, user.getSenha())) {
+            throw new RuntimeException("Senha atual incorreta");
+        }
+        user.setSenha(passwordEncoder.encode(senhaNova));
+        userRepository.save(user);
+    }
+
+    public void deletarConta(String email) {
+        if (!userRepository.existsById(email)) {
+            throw new RuntimeException("Usuário não encontrado");
+        }
+        userRepository.deleteById(email);
+    }
 }

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Configurações — Gestão Financeira</title>
+    <script>if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark')</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="/css/configuracoes.css" />
+    <link rel="stylesheet" href="/css/mobile.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* spinner no botão */
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spin { display: inline-block; animation: spin .7s linear infinite; }
+
+        /* feedback inline */
+        .feedback-msg {
+            display: none;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin-top: 12px;
+        }
+        .feedback-msg.error   { background: #fee2e2; color: #b91c1c; }
+        .feedback-msg.success { background: #dcfce7; color: #15803d; }
+        html.dark .feedback-msg.error   { background: #450a0a; color: #f87171; }
+        html.dark .feedback-msg.success { background: #052e16; color: #86efac; }
+    </style>
+</head>
+<body>
+<div class="app">
+
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon"><i class="ti ti-pig-money"></i></div>
+            <span>Gestão Financeira</span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <span class="nav-section">Principal</span>
+            <a class="nav-item" href="/dashboard"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
+            <a class="nav-item" href="/lancamento"><i class="ti ti-arrows-right-left"></i> Lançamentos</a>
+            <a class="nav-item" href="/contas"><i class="ti ti-wallet"></i> Contas</a>
+            <a class="nav-item" href="#"><i class="ti ti-target"></i> Orçamento</a>
+
+            <span class="nav-section">Análise</span>
+            <a class="nav-item" href="/fluxo"><i class="ti ti-trending-up"></i> Fluxo de Caixa</a>
+            <a class="nav-item" href="#"><i class="ti ti-file-analytics"></i> Relatórios</a>
+            <a class="nav-item" href="#"><i class="ti ti-chart-line"></i> Investimentos</a>
+
+            <span class="nav-section">Outros</span>
+            <a class="nav-item active" href="/configuracoes"><i class="ti ti-settings"></i> Configurações</a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-avatar" id="userAvatar">--</div>
+            <div class="user-info">
+                <span class="user-name">Meu Perfil</span>
+                <span class="user-email" id="sidebarEmail">—</span>
+            </div>
+            <button class="btn-logout" onclick="logout()" title="Sair">
+                <i class="ti ti-logout"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- ── Main ── -->
+    <main class="main">
+
+        <div class="topbar">
+            <button class="btn-hamburger" onclick="toggleSidebar()"><i class="ti ti-menu-2"></i></button>
+            <div class="topbar-title">
+                <h1>Configurações</h1>
+                <p>Gerencie sua conta e preferências</p>
+            </div>
+        </div>
+
+        <div class="content">
+
+            <!-- ── Segurança ── -->
+            <div>
+                <p class="settings-section-title">Segurança</p>
+                <div class="settings-card">
+                    <div class="settings-card-header">
+                        <div class="settings-card-icon icon-blue">
+                            <i class="ti ti-lock"></i>
+                        </div>
+                        <div class="settings-card-info">
+                            <h3>Alterar Senha</h3>
+                            <p>Crie uma senha forte com no mínimo 6 caracteres</p>
+                        </div>
+                    </div>
+                    <div class="settings-card-body">
+                        <div class="form-grid">
+                            <div class="form-field full">
+                                <label>Senha Atual</label>
+                                <div class="input-wrap">
+                                    <i class="ti ti-lock"></i>
+                                    <input type="password" id="senhaAtual" placeholder="Digite sua senha atual" autocomplete="current-password" />
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <label>Nova Senha</label>
+                                <div class="input-wrap">
+                                    <i class="ti ti-lock-open"></i>
+                                    <input type="password" id="senhaNova" placeholder="Mínimo 6 caracteres" autocomplete="new-password" />
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <label>Confirmar Nova Senha</label>
+                                <div class="input-wrap">
+                                    <i class="ti ti-lock-check"></i>
+                                    <input type="password" id="confirmarSenha" placeholder="Repita a nova senha" autocomplete="new-password" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feedback-msg" id="senhaFeedback"></div>
+                        <div class="form-actions">
+                            <button class="btn-primary" id="btnSalvarSenha" onclick="alterarSenha()">
+                                <i class="ti ti-check"></i> Salvar senha
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Aparência ── -->
+            <div>
+                <p class="settings-section-title">Aparência</p>
+                <div class="settings-card">
+                    <div class="settings-card-header">
+                        <div class="settings-card-icon icon-purple">
+                            <i class="ti ti-palette"></i>
+                        </div>
+                        <div class="settings-card-info">
+                            <h3>Tema</h3>
+                            <p>Escolha entre o modo claro e escuro</p>
+                        </div>
+                    </div>
+                    <div class="settings-card-body">
+                        <div class="theme-row">
+                            <span style="font-size:13.5px;color:#64748b">Selecione o tema de sua preferência</span>
+                            <div class="theme-options">
+                                <button class="theme-btn" data-tema="light" onclick="aplicarTema('light')">
+                                    <i class="ti ti-sun"></i> Claro
+                                </button>
+                                <button class="theme-btn" data-tema="dark" onclick="aplicarTema('dark')">
+                                    <i class="ti ti-moon"></i> Escuro
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Zona de Perigo ── -->
+            <div>
+                <p class="settings-section-title">Zona de Perigo</p>
+                <div class="settings-card">
+                    <div class="settings-card-header">
+                        <div class="settings-card-icon icon-red">
+                            <i class="ti ti-alert-triangle"></i>
+                        </div>
+                        <div class="settings-card-info">
+                            <h3>Excluir Conta</h3>
+                            <p>Ações irreversíveis que afetam permanentemente seus dados</p>
+                        </div>
+                    </div>
+                    <div class="settings-card-body">
+                        <div class="danger-row">
+                            <div class="danger-info">
+                                <h4>Excluir minha conta permanentemente</h4>
+                                <p>Todos os lançamentos, contas e histórico serão apagados. Essa ação não pode ser desfeita.</p>
+                            </div>
+                            <button class="btn-danger" onclick="excluirConta()">
+                                <i class="ti ti-trash"></i> Excluir conta
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+<script src="/js/configuracoes.js"></script>
+<script src="/js/mobile.js"></script>
+</body>
+</html>

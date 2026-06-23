@@ -40,4 +40,9 @@ public class PageController {
     public String fluxo() {
         return "fluxo";
     }
+
+    @GetMapping("/configuracoes")
+    public String configuracoes() {
+        return "configuracoes";
+    }
 }
