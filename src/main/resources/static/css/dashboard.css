@@ -317,3 +317,27 @@ tbody td { padding: 12px 16px; font-size: 13px; color: #1e293b; }
     .kpi-value { font-size: 14px; }
     .kpi-label { font-size: 11px; }
 }
+
+/* ── DARK MODE ── */
+html.dark body { background: #0f172a; color: #e2e8f0; }
+html.dark .topbar { background: #1e293b; border-color: #334155; }
+html.dark .topbar-title h1 { color: #f1f5f9; }
+html.dark .topbar-title p  { color: #94a3b8; }
+html.dark .kpi-card { background: #1e293b; border-color: #334155; }
+html.dark .kpi-value { color: #f1f5f9; }
+html.dark .kpi-label { color: #94a3b8; }
+html.dark .dash-card { background: #1e293b; border-color: #334155; }
+html.dark .dash-card-title { color: #f1f5f9; }
+html.dark .dash-card-sub   { color: #94a3b8; }
+html.dark .legend-name { color: #94a3b8; }
+html.dark .legend-pct  { color: #e2e8f0; }
+html.dark .account-item:hover { background: #0f172a; }
+html.dark .account-name { color: #f1f5f9; }
+html.dark .account-type { color: #94a3b8; }
+html.dark .account-balance { color: #f1f5f9; }
+html.dark .table-card { border-color: #334155; }
+html.dark thead tr { background: #0f172a; border-color: #334155; }
+html.dark thead th { color: #64748b; }
+html.dark tbody tr { border-color: #1e293b; }
+html.dark tbody tr:not(.empty-row):hover { background: #0f172a; }
+html.dark tbody td { color: #cbd5e1; }

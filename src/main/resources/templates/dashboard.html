@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard — Gestão Financeira</title>
+    <script>if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark')</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -27,12 +28,10 @@
             <a class="nav-item active" href="/dashboard"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
             <a class="nav-item" href="/lancamento"><i class="ti ti-arrows-right-left"></i> Lançamentos</a>
             <a class="nav-item" href="/contas"><i class="ti ti-wallet"></i> Contas</a>
-            <a class="nav-item" href="#"><i class="ti ti-target"></i> Orçamento</a>
 
             <span class="nav-section">Análise</span>
             <a class="nav-item" href="/fluxo"><i class="ti ti-trending-up"></i> Fluxo de Caixa</a>
             <a class="nav-item" href="#"><i class="ti ti-file-analytics"></i> Relatórios</a>
-            <a class="nav-item" href="#"><i class="ti ti-chart-line"></i> Investimentos</a>
 
             <span class="nav-section">Outros</span>
             <a class="nav-item" href="/configuracoes"><i class="ti ti-settings"></i> Configurações</a>

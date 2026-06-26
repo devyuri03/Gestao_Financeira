@@ -386,3 +386,20 @@ td.negativo { color: #dc2626; font-weight: 600; }
     .summary-card { padding: 14px; }
     .summary-value { font-size: 16px; }
 }
+
+/* ── DARK MODE ── */
+html.dark body { background: #0f172a; color: #e2e8f0; }
+html.dark .topbar { background: #1e293b; border-color: #334155; }
+html.dark .topbar-title h1 { color: #f1f5f9; }
+html.dark .topbar-title p  { color: #94a3b8; }
+html.dark .summary-card { background: #1e293b; border-color: #334155; }
+html.dark .summary-label { color: #94a3b8; }
+html.dark .summary-value { color: #f1f5f9; }
+html.dark .select-filter { background-color: #1e293b; border-color: #334155; color: #e2e8f0; }
+html.dark .table-card { background: #1e293b; border-color: #334155; }
+html.dark thead tr { background: #0f172a; border-color: #334155; }
+html.dark thead th { color: #64748b; }
+html.dark tbody tr { border-color: #334155; }
+html.dark tbody tr:not(.empty-row):hover { background: #0f172a; }
+html.dark tbody td { color: #cbd5e1; }
+html.dark td.col-mes { color: #f1f5f9; }

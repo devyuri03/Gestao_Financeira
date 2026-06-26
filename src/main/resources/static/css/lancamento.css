@@ -641,3 +641,38 @@ tbody td {
     .modal-body { padding: 16px; gap: 12px; }
     .btn-new { padding: 9px 14px; font-size: 13px; }
 }
+
+/* ── DARK MODE ── */
+html.dark body { background: #0f172a; color: #e2e8f0; }
+html.dark .topbar { background: #1e293b; border-color: #334155; }
+html.dark .topbar-title h1 { color: #f1f5f9; }
+html.dark .topbar-title p  { color: #94a3b8; }
+html.dark .summary-card { background: #1e293b; border-color: #334155; }
+html.dark .summary-label { color: #94a3b8; }
+html.dark .summary-value { color: #f1f5f9; }
+html.dark .search-wrap input { background: #1e293b; border-color: #334155; color: #e2e8f0; }
+html.dark .search-wrap input::placeholder { color: #475569; }
+html.dark .select-filter { background-color: #1e293b; border-color: #334155; color: #e2e8f0; }
+html.dark .table-card { background: #1e293b; border-color: #334155; }
+html.dark thead tr { background: #0f172a; border-color: #334155; }
+html.dark thead th { color: #64748b; }
+html.dark tbody tr { border-color: #334155; }
+html.dark tbody tr:not(.empty-row):hover { background: #0f172a; }
+html.dark tbody td { color: #cbd5e1; }
+html.dark .btn-action:hover { background: #0f172a; color: #94a3b8; }
+html.dark .btn-action.delete:hover { background: #450a0a; color: #f87171; }
+html.dark .modal { background: #1e293b; }
+html.dark .modal-header { border-color: #334155; }
+html.dark .modal-header h3 { color: #f1f5f9; }
+html.dark .modal-close:hover { background: #0f172a; color: #94a3b8; }
+html.dark .modal-body { background: #1e293b; }
+html.dark .form-field label { color: #cbd5e1; }
+html.dark .form-field input,
+html.dark .form-field select { background: #0f172a; border-color: #334155; color: #e2e8f0; }
+html.dark .form-field input:focus,
+html.dark .form-field select:focus { background: #1e293b; }
+html.dark .modal-actions { border-color: #334155; }
+html.dark .btn-cancel { background: #0f172a; color: #94a3b8; }
+html.dark .btn-cancel:hover { background: #334155; }
+html.dark .parcelado-group { background: #1e2a4a; border-color: #3730a3; }
+html.dark .parcelado-label { color: #a5b4fc; }
