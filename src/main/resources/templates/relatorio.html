@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Relatórios — Gestão Financeira</title>
+    <script>if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark')</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="/css/relatorio.css" />
+    <link rel="stylesheet" href="/css/mobile.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+<div class="app">
+
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon"><i class="ti ti-pig-money"></i></div>
+            <span>Gestão Financeira</span>
+        </div>
+
+        <nav class="sidebar-nav">
+            <span class="nav-section">Principal</span>
+            <a class="nav-item" href="/dashboard"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
+            <a class="nav-item" href="/lancamento"><i class="ti ti-arrows-right-left"></i> Lançamentos</a>
+            <a class="nav-item" href="/contas"><i class="ti ti-wallet"></i> Contas</a>
+
+            <span class="nav-section">Análise</span>
+            <a class="nav-item" href="/fluxo"><i class="ti ti-trending-up"></i> Fluxo de Caixa</a>
+            <a class="nav-item active" href="/relatorio"><i class="ti ti-file-analytics"></i> Relatórios</a>
+
+            <span class="nav-section">Outros</span>
+            <a class="nav-item" href="/configuracoes"><i class="ti ti-settings"></i> Configurações</a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-avatar" id="userAvatar">--</div>
+            <div class="user-info">
+                <span class="user-name" id="sidebarName">Meu Perfil</span>
+                <span class="user-email" id="sidebarEmail">—</span>
+            </div>
+            <button class="btn-logout" onclick="logout()" title="Sair">
+                <i class="ti ti-logout"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- ── Main ── -->
+    <main class="main">
+
+        <div class="topbar">
+            <button class="btn-hamburger" onclick="toggleSidebar()"><i class="ti ti-menu-2"></i></button>
+            <div class="topbar-title">
+                <h1>Relatórios</h1>
+                <p>Relatório mensal detalhado de lançamentos</p>
+            </div>
+        </div>
+
+        <div class="content">
+
+            <!-- Filtro de competência -->
+            <div class="filter-card">
+                <div class="filter-card-title">
+                    <i class="ti ti-calendar-stats"></i>
+                    Selecione a Competência
+                </div>
+                <div class="filter-row">
+                    <div class="select-wrap">
+                        <label>Mês</label>
+                        <select id="selectMes" class="select-comp">
+                            <option value="1">Janeiro</option>
+                            <option value="2">Fevereiro</option>
+                            <option value="3">Março</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Maio</option>
+                            <option value="6">Junho</option>
+                            <option value="7">Julho</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Setembro</option>
+                            <option value="10">Outubro</option>
+                            <option value="11">Novembro</option>
+                            <option value="12">Dezembro</option>
+                        </select>
+                    </div>
+                    <div class="select-wrap">
+                        <label>Ano</label>
+                        <select id="selectAno" class="select-comp"></select>
+                    </div>
+                    <button class="btn-gerar" onclick="gerarRelatorio()">
+                        <i class="ti ti-search"></i> Gerar Relatório
+                    </button>
+                </div>
+            </div>
+
+            <!-- Estado inicial -->
+            <div id="estadoInicial" class="empty-state-full">
+                <i class="ti ti-file-analytics"></i>
+                <p>Selecione o mês e o ano para gerar o relatório</p>
+            </div>
+
+            <!-- Loading -->
+            <div id="estadoLoading" class="empty-state-full hidden">
+                <i class="ti ti-loader-2 spin"></i>
+                <p>Carregando relatório...</p>
+            </div>
+
+            <!-- Seção de resultado -->
+            <div id="secaoResultado" class="hidden">
+
+                <!-- Summary cards -->
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <div class="summary-icon icon-green"><i class="ti ti-trending-up"></i></div>
+                        <div class="summary-info">
+                            <span class="summary-label">Total Receitas</span>
+                            <span class="summary-value positive" id="sumReceitas">R$ 0,00</span>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-icon icon-red"><i class="ti ti-trending-down"></i></div>
+                        <div class="summary-info">
+                            <span class="summary-label">Total Despesas</span>
+                            <span class="summary-value negative" id="sumDespesas">R$ 0,00</span>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-icon icon-blue"><i class="ti ti-scale"></i></div>
+                        <div class="summary-info">
+                            <span class="summary-label">Resultado</span>
+                            <span class="summary-value" id="sumResultado">R$ 0,00</span>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-icon icon-purple"><i class="ti ti-list-numbers"></i></div>
+                        <div class="summary-info">
+                            <span class="summary-label">Lançamentos</span>
+                            <span class="summary-value" id="sumQtd">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Barra de exportação -->
+                <div class="export-bar">
+                    <span class="export-label" id="exportLabel">—</span>
+                    <div class="export-btns">
+                        <button class="btn-export btn-excel" onclick="exportarExcel()">
+                            <i class="ti ti-file-spreadsheet"></i> Excel
+                        </button>
+                        <button class="btn-export btn-pdf" onclick="exportarPDF()">
+                            <i class="ti ti-file-type-pdf"></i> PDF
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tabela de lançamentos -->
+                <div class="table-card">
+                    <table id="tabelaRelatorio">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Tipo</th>
+                                <th>Descrição</th>
+                                <th>Categoria</th>
+                                <th>Pagamento</th>
+                                <th>Conta</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyRelatorio"></tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+<script src="/js/relatorio.js"></script>
+<script src="/js/mobile.js"></script>
+</body>
+</html>

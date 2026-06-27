@@ -45,4 +45,9 @@ public class PageController {
     public String configuracoes() {
         return "configuracoes";
     }
+
+    @GetMapping("/relatorio")
+    public String relatorio() {
+        return "relatorio";
+    }
 }

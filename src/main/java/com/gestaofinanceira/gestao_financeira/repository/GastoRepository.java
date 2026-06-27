@@ -32,6 +32,8 @@ public interface GastoRepository extends JpaRepository<Gasto, Long> {
     @Query("SELECT COUNT(g) FROM Gasto g WHERE g.usuario.email = :email AND g.statusLancamento = com.gestaofinanceira.gestao_financeira.enums.StatusLancamento.PENDENTE")
     long contarPendentes(@Param("email") String email);
 
+    List<Gasto> findByUsuarioEmailAndDataBetweenOrderByDataAsc(String email, LocalDate inicio, LocalDate fim);
+
     @Modifying
     @Query("UPDATE Gasto g SET g.conta = null WHERE g.conta.id = :contaId")
     void desvinculiarDaConta(@Param("contaId") Long contaId);
