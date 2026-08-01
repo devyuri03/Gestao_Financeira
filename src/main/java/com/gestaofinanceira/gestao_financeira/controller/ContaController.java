@@ -28,13 +28,7 @@ public class ContaController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ContaResponseDTO> buscarPorId(@PathVariable Long id, Authentication authentication) {
-        try {
-            return ResponseEntity.ok(contaService.buscarPorId(id, authentication.getName()));
-        } catch (SecurityException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(contaService.buscarPorId(id, authentication.getName()));
     }
 
     @PostMapping
@@ -45,24 +39,12 @@ public class ContaController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ContaResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody ContaRequestDTO dto, Authentication authentication) {
-        try {
-            return ResponseEntity.ok(contaService.atualizar(id, dto, authentication.getName()));
-        } catch (SecurityException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(contaService.atualizar(id, dto, authentication.getName()));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id, Authentication authentication) {
-        try {
-            contaService.deletar(id, authentication.getName());
-            return ResponseEntity.noContent().build();
-        } catch (SecurityException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        contaService.deletar(id, authentication.getName());
+        return ResponseEntity.noContent().build();
     }
 }

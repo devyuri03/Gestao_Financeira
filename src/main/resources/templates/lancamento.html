@@ -97,6 +97,9 @@
                     <i class="ti ti-search"></i>
                     <input type="text" id="searchInput" placeholder="Buscar por descrição ou categoria..." oninput="filtrarTabela()" />
                 </div>
+                <select class="select-filter" id="filtroMes" onchange="filtrarTabela()">
+                    <option value="">Todos os Meses</option>
+                </select>
                 <select class="select-filter" id="filtroTipo" onchange="filtrarTabela()">
                     <option value="">Todos os Tipos</option>
                     <option value="RECEITA">Receita</option>

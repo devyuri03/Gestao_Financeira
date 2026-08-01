@@ -46,10 +46,16 @@ public class ContaService {
             else if (tipo == TipoLancamento.DESPESA) saidas.put(contaId, valor);
         }
 
+        Map<Long, BigDecimal> saidasPendentes = new HashMap<>();
+        for (Object[] row : gastoRepository.somarDespesasPendentesPorContasAgrupado(ids)) {
+            saidasPendentes.put((Long) row[0], (BigDecimal) row[1]);
+        }
+
         return contas.stream()
                 .map(c -> toDTO(c,
                         entradas.getOrDefault(c.getId(), BigDecimal.ZERO),
-                        saidas.getOrDefault(c.getId(), BigDecimal.ZERO)))
+                        saidas.getOrDefault(c.getId(), BigDecimal.ZERO),
+                        saidasPendentes.getOrDefault(c.getId(), BigDecimal.ZERO)))
                 .toList();
     }
 
@@ -61,7 +67,8 @@ public class ContaService {
         }
         BigDecimal entradas = gastoRepository.somarPorContaETipo(id, TipoLancamento.RECEITA);
         BigDecimal saidas   = gastoRepository.somarPorContaETipo(id, TipoLancamento.DESPESA);
-        return toDTO(conta, entradas, saidas);
+        BigDecimal saidasPendentes = gastoRepository.somarDespesasPendentesPorConta(id);
+        return toDTO(conta, entradas, saidas, saidasPendentes);
     }
 
     public ContaResponseDTO salvar(ContaRequestDTO dto, String email) {
@@ -76,7 +83,7 @@ public class ContaService {
         conta.setTipoConta(dto.getTipoConta());
         conta.setUsuario(usuario);
 
-        return toDTO(contaRepository.save(conta), BigDecimal.ZERO, BigDecimal.ZERO);
+        return toDTO(contaRepository.save(conta), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
     }
 
     public ContaResponseDTO atualizar(Long id, ContaRequestDTO dto, String email) {
@@ -93,7 +100,8 @@ public class ContaService {
         Conta atualizada = contaRepository.save(conta);
         BigDecimal entradas = gastoRepository.somarPorContaETipo(id, TipoLancamento.RECEITA);
         BigDecimal saidas   = gastoRepository.somarPorContaETipo(id, TipoLancamento.DESPESA);
-        return toDTO(atualizada, entradas, saidas);
+        BigDecimal saidasPendentes = gastoRepository.somarDespesasPendentesPorConta(id);
+        return toDTO(atualizada, entradas, saidas, saidasPendentes);
     }
 
     @Transactional
@@ -113,13 +121,15 @@ public class ContaService {
         }
     }
 
-    private ContaResponseDTO toDTO(Conta conta, BigDecimal entradas, BigDecimal saidas) {
+    private ContaResponseDTO toDTO(Conta conta, BigDecimal entradas, BigDecimal saidas, BigDecimal saidasPendentes) {
         BigDecimal saldoAtual;
+        BigDecimal totalSaidasExibido = saidas;
         if (conta.getTipoConta() == TipoConta.CARTAO_CREDITO) {
             BigDecimal limite = conta.getLimite() != null
                     ? BigDecimal.valueOf(conta.getLimite())
                     : BigDecimal.ZERO;
-            saldoAtual = limite.subtract(saidas);
+            totalSaidasExibido = saidasPendentes;
+            saldoAtual = limite.subtract(saidasPendentes);
         } else {
             saldoAtual = conta.getSaldo().add(entradas).subtract(saidas);
         }
@@ -132,7 +142,7 @@ public class ContaService {
                 conta.getTipoConta(),
                 conta.getUsuario().getEmail(),
                 entradas,
-                saidas,
+                totalSaidasExibido,
                 saldoAtual
         );
     }

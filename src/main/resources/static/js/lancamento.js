@@ -56,6 +56,7 @@ async function carregarLancamentos() {
             return;
         }
         todosLancamentos = await res.json();
+        popularSelectMeses();
         renderizarTabela(todosLancamentos);
         atualizarCards(todosLancamentos);
     } catch (e) {
@@ -252,16 +253,38 @@ function atualizarCards(lista) {
 }
 
 // ── Filtros ──────────────────────────────────────
+const NOMES_MESES = [
+    'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+];
+
+function popularSelectMeses() {
+    const select = document.getElementById('filtroMes');
+    const selecionado = select.value;
+
+    const chaves = [...new Set(todosLancamentos.map(l => l.data.substring(0, 7)))]
+        .sort((a, b) => b.localeCompare(a));
+
+    select.innerHTML = '<option value="">Todos os Meses</option>' + chaves.map(chave => {
+        const [ano, mes] = chave.split('-').map(Number);
+        return `<option value="${chave}">${NOMES_MESES[mes - 1]} de ${ano}</option>`;
+    }).join('');
+
+    if (chaves.includes(selecionado)) select.value = selecionado;
+}
+
 function filtrarTabela() {
     const busca  = document.getElementById('searchInput').value.toLowerCase();
+    const mes    = document.getElementById('filtroMes').value;
     const tipo   = document.getElementById('filtroTipo').value;
     const status = document.getElementById('filtroStatus').value;
 
     const filtrado = todosLancamentos.filter(l => {
         const matchBusca  = !busca  || (l.descricao || '').toLowerCase().includes(busca) || (l.categoriaLancamento || '').toLowerCase().includes(busca);
+        const matchMes    = !mes    || l.data.substring(0, 7) === mes;
         const matchTipo   = !tipo   || l.tipoLancamento === tipo;
         const matchStatus = !status || l.statusLancamento === status;
-        return matchBusca && matchTipo && matchStatus;
+        return matchBusca && matchMes && matchTipo && matchStatus;
     });
 
     renderizarTabela(filtrado);

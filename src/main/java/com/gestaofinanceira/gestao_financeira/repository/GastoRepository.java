@@ -23,6 +23,12 @@ public interface GastoRepository extends JpaRepository<Gasto, Long> {
     @Query("SELECT g.conta.id, g.tipoLancamento, COALESCE(SUM(g.valor), 0) FROM Gasto g WHERE g.conta.id IN :contaIds AND g.statusLancamento != com.gestaofinanceira.gestao_financeira.enums.StatusLancamento.CANCELADO GROUP BY g.conta.id, g.tipoLancamento")
     List<Object[]> somarPorContasETipoAgrupado(@Param("contaIds") List<Long> contaIds);
 
+    @Query("SELECT COALESCE(SUM(g.valor), 0) FROM Gasto g WHERE g.conta.id = :contaId AND g.tipoLancamento = com.gestaofinanceira.gestao_financeira.enums.TipoLancamento.DESPESA AND g.statusLancamento = com.gestaofinanceira.gestao_financeira.enums.StatusLancamento.PENDENTE")
+    BigDecimal somarDespesasPendentesPorConta(@Param("contaId") Long contaId);
+
+    @Query("SELECT g.conta.id, COALESCE(SUM(g.valor), 0) FROM Gasto g WHERE g.conta.id IN :contaIds AND g.tipoLancamento = com.gestaofinanceira.gestao_financeira.enums.TipoLancamento.DESPESA AND g.statusLancamento = com.gestaofinanceira.gestao_financeira.enums.StatusLancamento.PENDENTE GROUP BY g.conta.id")
+    List<Object[]> somarDespesasPendentesPorContasAgrupado(@Param("contaIds") List<Long> contaIds);
+
     @Query("SELECT COALESCE(SUM(g.valor), 0) FROM Gasto g WHERE g.usuario.email = :email AND g.tipoLancamento = :tipo AND g.statusLancamento != com.gestaofinanceira.gestao_financeira.enums.StatusLancamento.CANCELADO AND g.data BETWEEN :inicio AND :fim")
     BigDecimal somarPorTipoEPeriodo(@Param("email") String email, @Param("tipo") TipoLancamento tipo, @Param("inicio") LocalDate inicio, @Param("fim") LocalDate fim);
 

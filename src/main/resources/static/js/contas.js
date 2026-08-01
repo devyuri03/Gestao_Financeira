@@ -258,7 +258,10 @@ function setType(type) {
   document.querySelectorAll('.type-option').forEach(el => {
     el.classList.toggle('selected', el.dataset.type === type);
   });
-  document.getElementById('limit-group').style.opacity = type === 'CARTAO_CREDITO' ? '1' : '.4';
+  const isCredito = type === 'CARTAO_CREDITO';
+  const inputLimite = document.getElementById('input-limit');
+  inputLimite.disabled = !isCredito;
+  if (!isCredito) inputLimite.value = '';
 }
 
 // ── Logout ────────────────────────────────────────

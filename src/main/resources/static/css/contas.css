@@ -291,6 +291,7 @@ body {
     background: #fff;
 }
 .form-input:focus { border-color: #6482d8; }
+.form-input:disabled { background: #f1f5f9; color: #94a3b8; cursor: not-allowed; }
 
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
@@ -381,6 +382,7 @@ html.dark .modal-close:hover { background: #0f172a; color: #94a3b8; }
 html.dark .form-label { color: #cbd5e1; }
 html.dark .form-input { background: #0f172a; border-color: #334155; color: #e2e8f0; }
 html.dark .form-input:focus { border-color: #6482d8; }
+html.dark .form-input:disabled { background: #1e293b; color: #64748b; }
 html.dark .type-option { background: #0f172a; border-color: #334155; color: #94a3b8; }
 html.dark .type-option:hover { border-color: #a5b4fc; background: #1e2a4a; }
 html.dark .type-option.selected { border-color: #6482d8; background: #1e2a4a; color: #a5b4fc; }

@@ -28,13 +28,7 @@ public class GastoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<GastoResponseDTO> buscarPorId(@PathVariable Long id, Authentication authentication) {
-        try {
-            return ResponseEntity.ok(gastoService.buscarPorId(id, authentication.getName()));
-        } catch (SecurityException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(gastoService.buscarPorId(id, authentication.getName()));
     }
 
     @PostMapping
@@ -45,24 +39,12 @@ public class GastoController {
 
     @PutMapping("/{id}")
     public ResponseEntity<GastoResponseDTO> atualizar(@PathVariable Long id, @Valid @RequestBody GastoRequestDTO dto, Authentication authentication) {
-        try {
-            return ResponseEntity.ok(gastoService.atualizarGasto(id, dto, authentication.getName()));
-        } catch (SecurityException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(gastoService.atualizarGasto(id, dto, authentication.getName()));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id, Authentication authentication) {
-        try {
-            gastoService.deletar(id, authentication.getName());
-            return ResponseEntity.noContent().build();
-        } catch (SecurityException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        gastoService.deletar(id, authentication.getName());
+        return ResponseEntity.noContent().build();
     }
 }
