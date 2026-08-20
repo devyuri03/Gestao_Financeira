@@ -2,6 +2,7 @@ package com.gestaofinanceira.gestao_financeira.service;
 
 import com.gestaofinanceira.gestao_financeira.dto.GastoRequestDTO;
 import com.gestaofinanceira.gestao_financeira.dto.GastoResponseDTO;
+import com.gestaofinanceira.gestao_financeira.exception.RecursoNaoEncontradoException;
 import com.gestaofinanceira.gestao_financeira.model.Conta;
 import com.gestaofinanceira.gestao_financeira.model.Gasto;
 import com.gestaofinanceira.gestao_financeira.model.User;
@@ -34,7 +35,7 @@ public class GastoService {
 
     public GastoResponseDTO buscarPorId(Long id, String email) {
         Gasto gasto = gastoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Gasto não encontrado com o ID: " + id));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Gasto não encontrado com o ID: " + id));
         if (!gasto.getUsuario().getEmail().equals(email)) {
             throw new SecurityException("Acesso negado");
         }
@@ -43,7 +44,7 @@ public class GastoService {
 
     public GastoResponseDTO salvar(GastoRequestDTO dto, String email) {
         User usuario = userRepository.findById(email)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado: " + email));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado: " + email));
 
         Gasto gasto = new Gasto();
         gasto.setValor(dto.getValor());
@@ -61,7 +62,7 @@ public class GastoService {
 
     public void deletar(Long id, String email) {
         Gasto gasto = gastoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Gasto não encontrado: " + id));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Gasto não encontrado: " + id));
         if (!gasto.getUsuario().getEmail().equals(email)) {
             throw new SecurityException("Acesso negado");
         }
@@ -70,7 +71,7 @@ public class GastoService {
 
     public GastoResponseDTO atualizarGasto(Long id, GastoRequestDTO dto, String email) {
         Gasto gasto = gastoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Gasto não encontrado: " + id));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Gasto não encontrado: " + id));
         if (!gasto.getUsuario().getEmail().equals(email)) {
             throw new SecurityException("Acesso negado");
         }
@@ -88,7 +89,7 @@ public class GastoService {
     private Conta resolverConta(Long contaId, String email) {
         if (contaId == null) return null;
         Conta conta = contaRepository.findById(contaId)
-                .orElseThrow(() -> new RuntimeException("Conta não encontrada: " + contaId));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Conta não encontrada: " + contaId));
         if (!conta.getUsuario().getEmail().equals(email)) {
             throw new SecurityException("Conta não pertence ao usuário");
         }

@@ -4,6 +4,7 @@ import com.gestaofinanceira.gestao_financeira.dto.ContaRequestDTO;
 import com.gestaofinanceira.gestao_financeira.dto.ContaResponseDTO;
 import com.gestaofinanceira.gestao_financeira.enums.TipoConta;
 import com.gestaofinanceira.gestao_financeira.enums.TipoLancamento;
+import com.gestaofinanceira.gestao_financeira.exception.RecursoNaoEncontradoException;
 import com.gestaofinanceira.gestao_financeira.model.Conta;
 import com.gestaofinanceira.gestao_financeira.model.User;
 import com.gestaofinanceira.gestao_financeira.repository.ContaRepository;
@@ -61,7 +62,7 @@ public class ContaService {
 
     public ContaResponseDTO buscarPorId(Long id, String email) {
         Conta conta = contaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Conta não encontrada com o ID: " + id));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Conta não encontrada com o ID: " + id));
         if (!conta.getUsuario().getEmail().equals(email)) {
             throw new SecurityException("Acesso negado");
         }
@@ -74,7 +75,7 @@ public class ContaService {
     public ContaResponseDTO salvar(ContaRequestDTO dto, String email) {
         validarConta(dto);
         User usuario = userRepository.findById(email)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado: " + email));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado: " + email));
 
         Conta conta = new Conta();
         conta.setNome(dto.getNome());
@@ -89,7 +90,7 @@ public class ContaService {
     public ContaResponseDTO atualizar(Long id, ContaRequestDTO dto, String email) {
         validarConta(dto);
         Conta conta = contaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Conta não encontrada: " + id));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Conta não encontrada: " + id));
         if (!conta.getUsuario().getEmail().equals(email)) {
             throw new SecurityException("Acesso negado");
         }
@@ -107,7 +108,7 @@ public class ContaService {
     @Transactional
     public void deletar(Long id, String email) {
         Conta conta = contaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Conta não encontrada: " + id));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Conta não encontrada: " + id));
         if (!conta.getUsuario().getEmail().equals(email)) {
             throw new SecurityException("Acesso negado");
         }

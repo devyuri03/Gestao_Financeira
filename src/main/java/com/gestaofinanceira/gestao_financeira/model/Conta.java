@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 
@@ -33,6 +34,7 @@ public class Conta {
     @Column(nullable = false)
     private TipoConta tipoConta;
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "usuario_email", nullable = false)
     private User usuario;

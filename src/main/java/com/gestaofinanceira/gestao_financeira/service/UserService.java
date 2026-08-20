@@ -1,6 +1,7 @@
 package com.gestaofinanceira.gestao_financeira.service;
 
 import com.gestaofinanceira.gestao_financeira.dto.RegistroRequestDTO;
+import com.gestaofinanceira.gestao_financeira.exception.RecursoNaoEncontradoException;
 import com.gestaofinanceira.gestao_financeira.model.User;
 import com.gestaofinanceira.gestao_financeira.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -46,7 +47,7 @@ public class UserService implements UserDetailsService {
 
     public void alterarSenha(String email, String senhaAtual, String senhaNova) {
         User user = userRepository.findById(email)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Usuário não encontrado"));
         if (!passwordEncoder.matches(senhaAtual, user.getSenha())) {
             throw new RuntimeException("Senha atual incorreta");
         }
@@ -56,7 +57,7 @@ public class UserService implements UserDetailsService {
 
     public void deletarConta(String email) {
         if (!userRepository.existsById(email)) {
-            throw new RuntimeException("Usuário não encontrado");
+            throw new RecursoNaoEncontradoException("Usuário não encontrado");
         }
         userRepository.deleteById(email);
     }

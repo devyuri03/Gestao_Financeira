@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -48,10 +49,12 @@ public class Gasto {
     @Column(nullable = false)
     private PagamentoLancamento pagamentoLancamento;
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "usuario_email", nullable = false)
     private User usuario;
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "conta_id")
     private Conta conta;

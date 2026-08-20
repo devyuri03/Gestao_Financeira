@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
@@ -30,11 +31,20 @@ public class AuthController {
                     loginData.getPassword()
                 )
             );
-            SecurityContextHolder.getContext().setAuthentication(auth);
+            SecurityContext context = SecurityContextHolder.createEmptyContext();
+            context.setAuthentication(auth);
+            SecurityContextHolder.setContext(context);
+
+            // Invalida qualquer sessão pré-existente (possivelmente fixada por um atacante)
+            // e cria uma nova, garantindo um JSESSIONID novo após a autenticação.
+            HttpSession sessaoAntiga = request.getSession(false);
+            if (sessaoAntiga != null) {
+                sessaoAntiga.invalidate();
+            }
             HttpSession session = request.getSession(true);
             session.setAttribute(
                 HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
-                SecurityContextHolder.getContext()
+                context
             );
             return ResponseEntity.ok("Login realizado com sucesso!");
         } catch (Exception e) {
